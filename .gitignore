@@ -1,0 +1,8 @@
+/artifacts/
+/cache/
+/node_modules/
+.idea
+hardhat.config.js
+package-lock.json
+test-results-1.json
+mochawesome-report

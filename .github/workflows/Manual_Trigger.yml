@@ -1,0 +1,111 @@
+name: Manual Trigger
+
+on:
+  # 手动触发事件
+  workflow_dispatch:
+    inputs:
+      GitUrlForAxon:
+        description: 'Axon -git url'
+        default: 'https://github.com/nervosnetwork/axon.git'
+      GitBranchForAxon:
+        description: 'axon  -git branch'
+        default: 'main'
+      StartAxon:
+        description: 'start axon'
+        default: 'true'
+      TestScript:
+        description: 'test:axon_test'
+        default: 'test:axon_test'
+#    inputs:
+#      logLevel:
+#        description: 'Log level'
+#        required: true
+#        default: 'warning'
+#      tags:
+#        description: 'Test scenario tags'
+#
+# jobs:
+#  printInputs:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - run: |
+#          echo "GitUrlForKit level: ${{ github.event.inputs.GitUrlForKit }}"
+#          echo "GitBranchForKit: ${{ github.event.inputs.GitBranchForKit }}"
+#          echo "TestScript: ${{ toJson(github.event.TestScript) }}"
+
+
+jobs:
+  #  start-godwoken:
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - run: echo "Part 1. Deploy Local Network of Godwoken"
+  #      - name: Clone source code
+  #        run: |
+  #          git clone -b compatibility-changes https://github.com/RetricSu/godwoken-kicker.git
+  #          cd godwoken-kicker
+  #          ./kicker init
+  #          ./kicker start
+  #          ./kicker info
+  #          ./kicker ps
+
+  contract-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        net: ['testnet_v1']
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: printInputs
+        id: printInputs
+        run: |
+          echo "GitUrlForAxon level: ${{ github.event.inputs.GitUrlForAxon }}"
+          echo "GitBranchForAxon: ${{ github.event.inputs.GitBranchForAxon }}"
+          echo "TestScript: ${{ github.event.inputs.TestScript }}"
+          echo "StartAxon: ${{ github.event.inputs.StartAxon }}"
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Node Cache
+        uses: actions/cache@v2
+        id: npm-and-yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ~/.npm
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('/home/runner/work/**/package-lock.json', '/home/runner/work/**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+      - run: echo "Part 2. Deploy Local Network of Axon"
+      - name: Clone source code
+        run: |
+          if [ ${{ github.event.inputs.StartAxon }} == "true" ];then
+            git clone -b ${{ github.event.inputs.GitBranchForAxon }} ${{ github.event.inputs.GitUrlForAxon }}
+            cd axon
+            cargo run --package axon --bin axon -- --config=./devtools/chain/config.toml --genesis=./devtools/chain/genesis_single_node.json > chain.log 2>&1 &
+            curl http://localhost:8000 -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"web3_clientVersion","params": [],"id":1}'
+          fi
+      - name: Run tests
+        id: runtest
+        run: |
+          npm install
+          npm run ${{ github.event.inputs.TestScript }}
+      - name: check godwoken status
+        if: success() || failure()
+        run: |
+          curl http://localhost:8000 -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"web3_clientVersion","params": [],"id":1}'
+      - name: Generate report
+        if: success() || failure()
+        run: |
+          mkdir public
+          cp -r mochawesome-report/* public
+      - name: Deploy report page to GitHub Page
+        uses: peaceiris/actions-gh-pages@v3
+        if: success() || failure()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
