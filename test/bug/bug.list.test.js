@@ -52,4 +52,20 @@ describe("bug", function () {
 
     })
 
+    //jsonRpcRequest: {
+    //   jsonrpc: '2.0',
+    //   method: 'eth_estimateGas',
+    //   params: [
+    //     {
+    //       maxFeePerGas: '0xffff',
+    //       maxPriorityFeePerGas: '0x1',
+    //       from: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+    //       data: '0x9cb8a26a'
+    //     }
+    //   ],
+    //   id: 55
+    // }
+    // jsonRpcResponse: { jsonrpc: '2.0', result: '0xffffffffffffffff', id: 55 }
+    //eth_estimateGas gas is bad
+    it("")
 })

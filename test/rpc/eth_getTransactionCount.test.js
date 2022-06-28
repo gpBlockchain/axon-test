@@ -1,6 +1,6 @@
 const {ethers} = require("hardhat");
 const {expect} = require("chai");
-const {eth_getTransactionCount,eth_getBalance,transferCkb,deployLogContract} = require("../utils/rpc.js");
+const {eth_getTransactionCount,eth_getBalance,transferCkb,deployLogContract,deploySelfDestructContract,invokeContract} = require("../utils/rpc.js");
 
 
 describe("eth_getTransactionCount", function () {
@@ -10,7 +10,7 @@ describe("eth_getTransactionCount", function () {
     let  sendTxAndHaveCkbAddress
     let contractAddress = ""
     let  no0xAndUpperCaseAddress = ""
-
+    let destructContractAddress
     before(async function(){
         // transfer ckb to unSendTxAndHaveCkbAddress
         await transferCkb(unSendTxAndHaveCkbAddress,'0x1')
@@ -19,9 +19,15 @@ describe("eth_getTransactionCount", function () {
         no0xAndUpperCaseAddress = sendTxAndHaveCkbAddress.substring(2).toUpperCase()
         // init contract address
         contractAddress = await deployLogContract()
+        let selfContract  = await deploySelfDestructContract()
+        // let selfDestructPayload =  selfContract.methods.selfDestruct.encodeABI()
+        let selfDestructPayload = "0x9cb8a26a"
+        let response = await invokeContract(selfContract.address,selfDestructPayload)
+        destructContractAddress = selfContract.address
         console.log('sendTxAndHaveCkbAddress:',sendTxAndHaveCkbAddress)
         console.log('contractAddress:',contractAddress)
         console.log('no0xAndUpperCaseAddress:',no0xAndUpperCaseAddress)
+        console.log('destructContractAddress:',destructContractAddress)
     })
 
     it("query account that account not have 0x and upper",async function (){
@@ -63,9 +69,17 @@ describe("eth_getTransactionCount", function () {
     it("query account that account is contractAddress", async function () {
         let nonceMap = await eth_getTransactionCount(contractAddress)
         expect(nonceMap.earliestNonce).to.be.equal(0)
-        expect(nonceMap.pendingNonce).to.be.equal(1)
-        expect(nonceMap.latestNonce).to.be.equal(1)
+        expect(nonceMap.pendingNonce).to.be.equal(0)
+        expect(nonceMap.latestNonce).to.be.equal(0)
     })
+
+    it("query account that account is destruct contractAddress", async function () {
+        let nonceMap = await eth_getTransactionCount(destructContractAddress)
+        expect(nonceMap.earliestNonce).to.be.equal(0)
+        expect(nonceMap.pendingNonce).to.be.equal(0)
+        expect(nonceMap.latestNonce).to.be.equal(0)
+    })
+
 
 })
 
