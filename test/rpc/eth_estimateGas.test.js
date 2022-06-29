@@ -636,7 +636,6 @@ describe("eth_estimateGas", function () {
 
 
             it('data is method that not exist on contract(contract have payable fallback)',async ()=>{
-                try {
                     let estimateGas = await ethers.provider.send('eth_estimateGas',
                         [{
                             from: haveCkbAddress,
@@ -644,10 +643,7 @@ describe("eth_estimateGas", function () {
                             data: notExistMethodSig,
                             value:'0x12'
                         }])
-                }catch (e){
-                    return
-                }
-                expect('').to.be.include('failed')
+                expect(estimateGas).to.be.include('0x')
 
             })
 

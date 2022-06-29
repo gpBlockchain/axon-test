@@ -40,7 +40,7 @@ module.exports = {
         },
     },
     //bsc_test
-    defaultNetwork:"axon_test",
+    // defaultNetwork:"axon_test",
     // defaultNetwork: "gw_alphanet_v1", //gw_local_kit_net_v1 gw_testnet_v11
     // defaultNetwork: "rinkeby",
     // defaultNetwork: "gw_local_kit_net_v1",

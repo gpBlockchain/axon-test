@@ -54,9 +54,9 @@ async function getFallbackAndReceiveContractAddress() {
     let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
     let tx = await ethers.provider.getSigner(0).sendTransaction({
         data: logContract.bytecode,
-        maxFeePerGas: '0xffff',
-        maxPriorityFeePerGas: '0x1',
-        nonce: nonceOfFrom
+        // maxFeePerGas: '0xffff',
+        // maxPriorityFeePerGas: '0x1',
+        // nonce: nonceOfFrom
     })
     let response = await tx.wait(1)
     return response.contractAddress
@@ -67,9 +67,9 @@ async function getNoFallbackAndReceiveContractAddress() {
     let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
     let tx = await ethers.provider.getSigner(0).sendTransaction({
         data: logContract.bytecode,
-        maxFeePerGas: '0xffff',
-        maxPriorityFeePerGas: '0x1',
-        nonce: nonceOfFrom
+        // maxFeePerGas: '0xffff',
+        // maxPriorityFeePerGas: '0x1',
+        // nonce: nonceOfFrom
     })
     let response = await tx.wait(1)
     return response.contractAddress
