@@ -1,6 +1,7 @@
 const {ethers} = require("hardhat");
 const {expect} = require("chai");
-const {getDeployLogContractAddress, getFallbackAndReceiveContractAddress,
+const {
+    getDeployLogContractAddress, getFallbackAndReceiveContractAddress,
     getNoFallbackAndReceiveContractAddress, deployLogContractAddress, getTestLogSigByTimes,
     getFailedTxContractAddress
 } = require("../utils/rpc");
@@ -14,7 +15,7 @@ describe("eth_estimateGas", function () {
     let norExistAddress = '0x0c1efcca2bcb65a532274f3ef24c044ef4ab6d74'
     let outOfboundAddress = '0x0c1efcca2bcb65a532274f3ef24c044ef4ab6d7412345'
     let lowLengthAddress = '0x0c1efcca2bcb65a532274f3ef24c044ef4ab6'
-    it("send tx without data", async () => {
+    it("send tx without data,should return gasCost", async () => {
         let estimateGas = await ethers.provider.send('eth_estimateGas',
             [{
                 to: normalEoaAddress,
@@ -23,7 +24,7 @@ describe("eth_estimateGas", function () {
     })
 
 
-    it("from have balance, data is method sign", async () => {
+    it("from have balance, data is method sign,should return revert", async () => {
         try {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
@@ -57,18 +58,7 @@ describe("eth_estimateGas", function () {
 
     })
 
-    it("from is address that not send tx and not have balance, to is normalEoaAddress ", async () => {
-        let estimateGas = await ethers.provider.send('eth_estimateGas',
-            [{
-                from: norExistAddress,
-                to: normalEoaAddress,
-                data: '0x'
-            }])
-        console.log('estimateGas:', estimateGas)
-        expect(estimateGas).to.be.include('0x')
-    })
-
-    it("from is address that not send tx and not have balance, to is normalEoaAddress ", async () => {
+    it("from is address that not send tx and not have balance, to is normalEoaAddress,should return gasCost", async () => {
         let estimateGas = await ethers.provider.send('eth_estimateGas',
             [{
                 from: norExistAddress,
@@ -80,7 +70,7 @@ describe("eth_estimateGas", function () {
     })
 
 
-    it("from is address that out of bound", async () => {
+    it("from is address that out of bound,should return error msg", async () => {
         try {
 
             let estimateGas = await ethers.provider.send('eth_estimateGas',
@@ -96,7 +86,7 @@ describe("eth_estimateGas", function () {
         expect("").to.be.include("failed")
     })
 
-    it("from is address that length too low", async () => {
+    it("from is address that length too low,should return err msg ", async () => {
         try {
 
             let estimateGas = await ethers.provider.send('eth_estimateGas',
@@ -113,7 +103,7 @@ describe("eth_estimateGas", function () {
 
     })
 
-    it("from is address that from is empty", async () => {
+    it("from is address that from is empty,should return error msg ", async () => {
         // todo close Auto-fill parameters from
         let estimateGas = await ethers.provider.send('eth_estimateGas',
             [{
@@ -137,7 +127,7 @@ describe("eth_estimateGas", function () {
             contractWithoutFallbackMethodAddress = await getNoFallbackAndReceiveContractAddress()
         })
 
-        it("to is address that on 0x and upperCase", async () => {
+        it("to is address that no 0x and upperCase,should return gasCost", async () => {
             //todo check axon result sync with eth ?
             //axon :succ
             // hardhat: Errors encountered in param 0: Invalid value "0C1EFCCA2BCB65A532274F3EF24C044EF4AB6D73" supplied to : RpcCallRequest/to: ADDRESS | undefined
@@ -149,7 +139,7 @@ describe("eth_estimateGas", function () {
                 }])
             expect(estimateGas).to.be.include('0x')
         })
-        it("to is address that out of bound ", async () => {
+        it("to is address that out of bound ,should return error msg", async () => {
             try {
                 let estimateGas = await ethers.provider.send('eth_estimateGas',
                     [{
@@ -163,7 +153,7 @@ describe("eth_estimateGas", function () {
             expect("").to.be.include("failed")
         })
 
-        it("to is empty ", async () => {
+        it("to is empty ,should return gasCost", async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
@@ -172,7 +162,7 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include('0x')
         })
 
-        it("to is null ", async () => {
+        it("to is null,should return gasCost", async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
@@ -182,7 +172,7 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include('0x')
         })
 
-        it('to is contract that  have fallback method', async () => {
+        it('to is contract that  have fallback method,should return gasCost', async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
@@ -191,7 +181,7 @@ describe("eth_estimateGas", function () {
                 }])
         })
 
-        it('to is contract that not have fallback method', async () => {
+        it('to is contract that not have fallback method,should return error msg', async () => {
             try {
                 let estimateGas = await ethers.provider.send('eth_estimateGas',
                     [{
@@ -210,7 +200,7 @@ describe("eth_estimateGas", function () {
         before(async function () {
             haveCkbAddress = await ethers.provider.getSigner(0).getAddress()
         })
-        it("gas without 0x", async () => {
+        it("gas without 0x ,should return gasCost", async () => {
 
             //todo axon :succ
             // hardhat failed
@@ -223,7 +213,7 @@ describe("eth_estimateGas", function () {
                 }])
         })
 
-        it("gas with 0x", async () => {
+        it("gas with 0x,should return gasCost", async () => {
 
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
@@ -232,9 +222,10 @@ describe("eth_estimateGas", function () {
                     data: '0x',
                     gas: '0x100000'
                 }])
+            expect(estimateGas).to.be.include('0x')
         })
 
-        it("gas is 0", async () => {
+        it("gas is 0,should return error msg", async () => {
 
             try {
                 let estimateGas = await ethers.provider.send('eth_estimateGas',
@@ -251,7 +242,7 @@ describe("eth_estimateGas", function () {
 
         })
 
-        it("gas is eq estimateGas", async () => {
+        it("gas is eq estimateGas,should return gasCost,gas =estimateGas  ", async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
@@ -270,7 +261,7 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include(estimateGas2)
         })
 
-        it("gas  eq estimateGas-1", async () => {
+        it("gas  eq estimateGas-1,should return gasCost ,gasCost = estimateGas", async () => {
 
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
@@ -291,7 +282,7 @@ describe("eth_estimateGas", function () {
 
             expect(estimateGas2).to.be.include(estimateGas)
         })
-        it("gas  eq estimateGas-2", async () => {
+        it("gas  eq estimateGas-2,should return error msg", async () => {
 
             try {
                 let estimateGas = await ethers.provider.send('eth_estimateGas',
@@ -314,7 +305,7 @@ describe("eth_estimateGas", function () {
 
         })
 
-        it("gas is null ", async () => {
+        it("gas is null,should return gasCost", async () => {
 
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
@@ -325,7 +316,7 @@ describe("eth_estimateGas", function () {
                 }])
         })
 
-        it("gas is empty  ", async () => {
+        it("gas is empty ,should return gasCost ", async () => {
 
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
@@ -335,7 +326,7 @@ describe("eth_estimateGas", function () {
                 }])
         })
 
-        it("gas is very big   ", async () => {
+        it("gas is very big,should return error msg", async () => {
             try {
                 let estimateGas = await ethers.provider.send('eth_estimateGas',
                     [{
@@ -358,7 +349,7 @@ describe("eth_estimateGas", function () {
             haveCkbAddress = await ethers.provider.getSigner(0).getAddress()
         })
 
-        it('value without 0x', async () => {
+        it('value without 0x,should return gas Cost ', async () => {
             //todo
             // check axon succ
             // hardhat failed
@@ -372,7 +363,7 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include('0x')
         })
 
-        it('value with 0x', async () => {
+        it('value with 0x,should return gasCost', async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
@@ -384,7 +375,7 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include('0x')
         })
 
-        it('value is empty', async () => {
+        it('value is empty,should return gas Cost', async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
@@ -394,7 +385,7 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include('0x')
         })
 
-        it('value =  from balance ', async () => {
+        it('value =  from balance,should return gasCost ', async () => {
             let fromBalance = await ethers.provider.getBalance(haveCkbAddress)
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
@@ -406,8 +397,8 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include('0x')
         })
 
-        it('value >  from balance ', async () => {
-            //todo  value
+        it('value >  from balance,should return gas cost', async () => {
+            //todo check  should return error or return gas cost ?
             let fromBalance = await ethers.provider.getBalance(haveCkbAddress)
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
@@ -418,7 +409,7 @@ describe("eth_estimateGas", function () {
                 }])
             expect(estimateGas).to.be.include('0x')
         })
-        it('value is null ', async () => {
+        it('value is null,should return gas cost', async () => {
             //todo  value
             let fromBalance = await ethers.provider.getBalance(haveCkbAddress)
             let estimateGas = await ethers.provider.send('eth_estimateGas',
@@ -439,7 +430,7 @@ describe("eth_estimateGas", function () {
             haveCkbAddress = await ethers.provider.getSigner(0).getAddress()
         })
 
-        it("data is 0x",async ()=>{
+        it("data is 0x,should return gas cost", async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
@@ -450,20 +441,20 @@ describe("eth_estimateGas", function () {
 
         })
 
-        it("data is ''",async ()=>{
+        it("data is '',should return gas cost", async () => {
             //todo check axon succ
             // hardhat failed
-                let estimateGas = await ethers.provider.send('eth_estimateGas',
-                    [{
-                        from: haveCkbAddress,
-                        to: normalEoaAddress,
-                        data: '',
-                    }])
-                expect(estimateGas).to.be.include('0x')
+            let estimateGas = await ethers.provider.send('eth_estimateGas',
+                [{
+                    from: haveCkbAddress,
+                    to: normalEoaAddress,
+                    data: '',
+                }])
+            expect(estimateGas).to.be.include('0x')
 
 
         })
-        it("data is 0x0fff",async ()=>{
+        it("data is 0x0fff,should return gas cost", async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
@@ -473,7 +464,7 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include('0x')
         })
 
-        it("data is 0xfff",async ()=>{
+        it("data is 0xfff,should return error msg", async () => {
             try {
                 let estimateGas = await ethers.provider.send('eth_estimateGas',
                     [{
@@ -482,14 +473,14 @@ describe("eth_estimateGas", function () {
                         data: '0xfff',
                     }])
                 expect(estimateGas).to.be.include('0x')
-            }catch (e){
+            } catch (e) {
                 return
             }
             expect('').to.be.include('failed')
 
         })
 
-        it("data is null",async ()=>{
+        it("data is null,should return gas cost", async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
@@ -499,7 +490,7 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include('0x')
         })
 
-        it("data is emtpy ",async ()=>{
+        it("data is empty, should return gas cost ", async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
@@ -515,19 +506,19 @@ describe("eth_estimateGas", function () {
             haveCkbAddress = await ethers.provider.getSigner(0).getAddress()
         })
 
-        it('gasPrice is 0x1 ',async ()=>{
+        it('gasPrice is 0x1,should return gas cost', async () => {
             //todo check
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
                     to: normalEoaAddress,
-                    data:'0x',
-                    gasPrice:'0x1'
+                    data: '0x',
+                    gasPrice: '0x1'
                 }])
             expect(estimateGas).to.be.include('0x')
         })
 
-        it('gasPrice without 0x',async ()=>{
+        it('gasPrice without 0x,should return gas cost ', async () => {
             // todo check
             // axon succ
             // hardhat failed
@@ -535,13 +526,13 @@ describe("eth_estimateGas", function () {
                 [{
                     from: haveCkbAddress,
                     to: normalEoaAddress,
-                    data:'0x',
-                    gasPrice:'11'
+                    data: '0x',
+                    gasPrice: '11'
                 }])
             expect(estimateGas).to.be.include('0x')
         })
 
-        it('gasPrice > min gasPrice  ',async ()=>{
+        it('gasPrice > min gasPrice ,should return gas cost', async () => {
             // todo check
             // axon succ
             // hardhat failed
@@ -549,13 +540,13 @@ describe("eth_estimateGas", function () {
                 [{
                     from: haveCkbAddress,
                     to: normalEoaAddress,
-                    data:'0x',
-                    gasPrice:'0xffffffffff'
+                    data: '0x',
+                    gasPrice: '0xffffffffff'
                 }])
             expect(estimateGas).to.be.include('0x')
         })
 
-        it('gasPrice very big  (exceed MAX_INTEGER (2^256-1)) ',async ()=>{
+        it('gasPrice very big  (exceed MAX_INTEGER (2^256-1)),should return error msg  ', async () => {
             // todo check
             // axon succ
             // hardhat failed
@@ -564,17 +555,17 @@ describe("eth_estimateGas", function () {
                     [{
                         from: haveCkbAddress,
                         to: normalEoaAddress,
-                        data:'0x',
-                        gasPrice:'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+                        data: '0x',
+                        gasPrice: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
                     }])
                 expect(estimateGas).to.be.include('0x')
-            }catch (e){
+            } catch (e) {
                 return
             }
             expect('').to.be.include('failed')
         })
 
-        it('gasPrice very very  big-1 ',async ()=>{
+        it('gasPrice very very  big-1 ,should return gas cost', async () => {
 
             try {
                 let estimateGas = await ethers.provider.send('eth_estimateGas',
@@ -584,7 +575,7 @@ describe("eth_estimateGas", function () {
                         data: '0x',
                         gasPrice: '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
                     }])
-            }catch (e){
+            } catch (e) {
                 return
             }
             expect('').to.be.include('failed')
@@ -609,69 +600,70 @@ describe("eth_estimateGas", function () {
                 contractWithoutFallbackMethodAddress = await getNoFallbackAndReceiveContractAddress()
             })
 
-            it( 'data is  method that contains payable tag ',async ()=>{
+            it('data is  method that contains payable tag , should return gas cost', async () => {
                 let estimateGas = await ethers.provider.send('eth_estimateGas',
                     [{
                         from: haveCkbAddress,
                         to: contractWithFallbackMethodAddress,
                         data: payableMethodSig,
-                        value:'0x12'
+                        value: '0x12'
                     }])
                 expect(estimateGas).to.be.include('0x')
             })
 
-            it('data is method that not contains payable tag ',async ()=>{
+            it('data is method that not contains payable tag,should return error msg  ', async () => {
                 try {
                     let estimateGas = await ethers.provider.send('eth_estimateGas',
                         [{
                             from: haveCkbAddress,
                             to: contractWithFallbackMethodAddress,
                             data: notContainsPayableMethodSig,
-                            value:'0x12'
+                            value: '0x12'
                         }])
-                }catch (e){
+                } catch (e) {
                     return
                 }
                 expect('').to.be.include('failed')
             })
 
 
-            it('data is method that not exist on contract(contract have payable fallback)',async ()=>{
-                    let estimateGas = await ethers.provider.send('eth_estimateGas',
-                        [{
-                            from: haveCkbAddress,
-                            to: contractWithFallbackMethodAddress,
-                            data: notExistMethodSig,
-                            value:'0x12'
-                        }])
+            it('data is method that not exist on contract(contract have payable fallback),should return gas cost ', async () => {
+                let estimateGas = await ethers.provider.send('eth_estimateGas',
+                    [{
+                        from: haveCkbAddress,
+                        to: contractWithFallbackMethodAddress,
+                        data: notExistMethodSig,
+                        value: '0x12'
+                    }])
                 expect(estimateGas).to.be.include('0x')
 
             })
 
-            it('data is method that not exist on contract(contract have not payable fallback)',async ()=>{
+            it('data is method that not exist on contract(contract have not payable fallback),should return error msg ', async () => {
                 try {
                     let estimateGas = await ethers.provider.send('eth_estimateGas',
                         [{
                             from: haveCkbAddress,
                             to: contractWithoutFallbackMethodAddress,
                             data: notExistMethodSig,
-                            value:'0x12'
+                            value: '0x12'
                         }])
-                }catch (e){
+                } catch (e) {
                     return
                 }
                 expect('').to.be.include('failed')
 
             })
 
-            it('data is null (contract have  payable fallback)',async ()=>{
+            it('data is null (contract have  payable fallback),should return gas cost', async () => {
                 let estimateGas = await ethers.provider.send('eth_estimateGas',
                     [{
                         from: haveCkbAddress,
                         to: contractWithFallbackMethodAddress,
                         data: null,
-                        value:'0x12'
+                        value: '0x12'
                     }])
+                expect(estimateGas).to.be.include('0x')
             })
         })
 
@@ -686,29 +678,30 @@ describe("eth_estimateGas", function () {
             haveCkbAddress = await ethers.provider.getSigner(0).getAddress()
         })
 
-        it('nonce is rand str',async ()=>{
+        it('nonce is rand str, should return error msg ', async () => {
             try {
                 let estimateGas = await ethers.provider.send('eth_estimateGas',
                     [{
                         from: haveCkbAddress,
                         to: normalEoaAddress,
                         data: '0x',
-                        nonce:'adnaldnaldawdaw'
+                        nonce: 'adnaldnaldawdaw'
                     }])
-            }catch (e){
+            } catch (e) {
                 return
             }
             expect('').to.be.include('failed')
 
         })
 
-        it('nonce is hex str',async ()=>{
+        it('nonce is hex str,should return gas cost ', async () => {
+            // todo check Whether the nonce affects the interface that name is eth_estimateGas
             let estimateGas = await ethers.provider.send('eth_estimateGas',
                 [{
                     from: haveCkbAddress,
                     to: normalEoaAddress,
                     data: '0x',
-                    nonce:'0x1234'
+                    nonce: '0x1234'
                 }])
             expect(estimateGas).to.be.include('0x')
         })
@@ -721,7 +714,7 @@ describe("eth_estimateGas", function () {
         before(async function () {
             haveCkbAddress = await ethers.provider.getSigner(0).getAddress()
         })
-        it('will out of gas tx', async () => {
+        it('will out of gas tx,return error msg ', async () => {
 
             //deploy logContract
             let logContractAddress = await deployLogContractAddress()
@@ -737,7 +730,7 @@ describe("eth_estimateGas", function () {
                         to: logContractAddress,
                         data: log500000Sig,
                     }])
-            }catch (e){
+            } catch (e) {
                 console.log(e)
                 expect(e.toString()).to.be.not.include('HeadersTimeoutError')
                 return
@@ -745,7 +738,7 @@ describe("eth_estimateGas", function () {
             expect('').to.be.include('failed')
         })
 
-        it("revert tx",async ()=>{
+        it("revert tx,should return error msg", async () => {
             // deploy contract that contains revert method
             let contractAddress = await getFailedTxContractAddress();
             // invoke method that contains revert
@@ -759,13 +752,11 @@ describe("eth_estimateGas", function () {
                         to: contractAddress,
                         data: revertSig,
                     }])
-            }catch (e){
+            } catch (e) {
                 return
             }
             expect("").to.be.include("failed")
         })
     })
-
-
 
 })
