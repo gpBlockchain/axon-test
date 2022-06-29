@@ -879,7 +879,9 @@ describe("eth_call", function () {
                 console.log(decodeRet)
             } catch (e) {
                 expect(e.toString()).to.be.include("exceeds rpc gas limit of")
+                return
             }
+            expect('').to.be.include('failed')
         })
 
         it("gas - out of gas  ", async () => {
