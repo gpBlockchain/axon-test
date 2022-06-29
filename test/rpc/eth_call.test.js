@@ -5,7 +5,7 @@ const {
     getNoFallbackAndReceiveContractAddress, deployLogContractAddress
 } = require("../utils/rpc.js");
 const {BigNumber} = require("ethers");
-const {getTestLogSigByTimes, getContractAddress, getEthCallContract} = require("../utils/rpc");
+const {getTestLogSigByTimes, getContractAddress, getEthCallContract, getFailedTxContractAddress} = require("../utils/rpc");
 
 
 describe("eth_call", function () {
@@ -733,6 +733,60 @@ describe("eth_call", function () {
             expect(ret).to.be.include('0x')
         })
     })
+
+    describe("from have ckb(failed tx)", function () {
+
+        let haveCkbAddress;
+
+        before(async function () {
+            haveCkbAddress = await ethers.provider.getSigner(0).getAddress()
+        })
+        it('will out of gas tx', async () => {
+
+            //deploy logContract
+            let logContractAddress = await deployLogContractAddress()
+
+            // build out of gas tx data
+            let log500000Sig = getTestLogSigByTimes(500000)
+
+            // call out of gas tx
+            try {
+                let ret = await ethers.provider.send('eth_call',
+                    [{
+                        from: haveCkbAddress,
+                        to: logContractAddress,
+                        data: log500000Sig,
+                    },'latest'])
+            }catch (e){
+                console.log(e)
+                expect(e.toString()).to.be.not.include('HeadersTimeoutError')
+                return
+            }
+            expect('').to.be.include('failed')
+        })
+
+        it("revert tx",async ()=>{
+            // deploy contract that contains revert method
+            let contractAddress = await getFailedTxContractAddress();
+            // invoke method that contains revert
+
+            try {
+                //FailedTx_assert()
+                let revertSig = "0xa0f2f484";
+                await ethers.provider.send('eth_call',
+                    [{
+                        from: haveCkbAddress,
+                        to: contractAddress,
+                        data: revertSig,
+                    },'latest'])
+            }catch (e){
+                console.log(e)
+                return
+            }
+            expect("").to.be.include("failed")
+        })
+    })
+
 
     describe("from have ckb(msg,tx)", async function () {
         const getMsgFnSign = "0xb5fdeb23"
