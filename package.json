@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "compile": "hardhat compile",
-    "test:axon_test": "hardhat test --network axon_test",
+    "test:axon_test": "hardhat test --network axon_test --grep eth_estimateGas",
     "test:test": "hardhat test --network ${npm_config_network} --grep \"${npm_config_grep}\""
   },
   "keywords": [

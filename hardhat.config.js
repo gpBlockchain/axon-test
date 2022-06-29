@@ -25,6 +25,19 @@ module.exports = {
                 passphrase: "",
             },
         },
+        rinkeby: {
+            url: `https://rinkeby.infura.io/v3/${INFURA_PROJECT_ID}`,
+            accounts: {
+                mnemonic: "test test test test test test test test test test test junk",
+                path: "m/44'/60'/0'/0",
+                initialIndex: 0,
+                count: 20,
+                passphrase: "",
+            },
+
+            // gas: 1_000_000_000_000_001, // Infura seems to cap it at 19981536.
+            // gasPrice: 1
+        },
     },
     //bsc_test
     defaultNetwork:"axon_test",

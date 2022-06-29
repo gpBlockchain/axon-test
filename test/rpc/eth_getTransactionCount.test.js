@@ -1,6 +1,6 @@
 const {ethers} = require("hardhat");
 const {expect} = require("chai");
-const {eth_getTransactionCount,eth_getBalance,transferCkb,deployLogContract,deploySelfDestructContract,invokeContract} = require("../utils/rpc.js");
+const {eth_getTransactionCount,eth_getBalance,transferCkb,getDeployLogContractAddress,deploySelfDestructContract,invokeContract} = require("../utils/rpc.js");
 
 
 describe("eth_getTransactionCount", function () {
@@ -18,7 +18,7 @@ describe("eth_getTransactionCount", function () {
         sendTxAndHaveCkbAddress = await ethers.provider.getSigner(0).getAddress()
         no0xAndUpperCaseAddress = sendTxAndHaveCkbAddress.substring(2).toUpperCase()
         // init contract address
-        contractAddress = await deployLogContract()
+        contractAddress = await getDeployLogContractAddress()
         let selfContract  = await deploySelfDestructContract()
         // let selfDestructPayload =  selfContract.methods.selfDestruct.encodeABI()
         let selfDestructPayload = "0x9cb8a26a"

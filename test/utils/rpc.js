@@ -36,8 +36,34 @@ async function transferCkb(transferTo, value) {
     await tx.wait(1)
 }
 
-async function deployLogContract() {
+async function getDeployLogContractAddress() {
     let logContract = await ethers.getContractFactory("opcode_assembly_log");
+    let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
+    let tx = await ethers.provider.getSigner(0).sendTransaction({
+        data: logContract.bytecode,
+        maxFeePerGas: '0xffff',
+        maxPriorityFeePerGas: '0x1',
+        nonce: nonceOfFrom
+    })
+    let response = await tx.wait(1)
+    return response.contractAddress
+}
+
+async function getFallbackAndReceiveContractAddress() {
+    let logContract = await ethers.getContractFactory("fallbackAndReceive");
+    let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
+    let tx = await ethers.provider.getSigner(0).sendTransaction({
+        data: logContract.bytecode,
+        maxFeePerGas: '0xffff',
+        maxPriorityFeePerGas: '0x1',
+        nonce: nonceOfFrom
+    })
+    let response = await tx.wait(1)
+    return response.contractAddress
+}
+
+async function getNoFallbackAndReceiveContractAddress() {
+    let logContract = await ethers.getContractFactory("NoFallbackAndReceive");
     let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
     let tx = await ethers.provider.getSigner(0).sendTransaction({
         data: logContract.bytecode,
@@ -86,7 +112,10 @@ module.exports = {
     eth_getTransactionCount,
     eth_getBalance,
     transferCkb,
-    deployLogContract,
+    getDeployLogContractAddress,
     deploySelfDestructContract,
-    invokeContract
+    invokeContract,
+    getNonce,
+    getFallbackAndReceiveContractAddress,
+    getNoFallbackAndReceiveContractAddress,
 }

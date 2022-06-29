@@ -1,5 +1,5 @@
 const {ethers} = require("hardhat");
-
+const {BigNumber} = require("ethers");
 
 
 describe("bug", function () {
@@ -21,16 +21,27 @@ describe("bug", function () {
         console.log("test address:",testAccountAddress)
         // 查询账户nonce
         let nonce = await ethers.provider.getTransactionCount(testAccountAddress)
-        console.log("nonce:",nonce)
-        // 发送一笔 nonce+100的交易
-        let tx = await ethers.provider.send("eth_sendTransaction", [{
-            "to": "0x0c1efcca2bcb65a532274f3ef24c044ef4ab6d73",
-            "value": "0x1",
-            "gas":"0xffffff",
-            "maxFeePerGas":"0x1111",
-            "maxPriorityFeePerGas":"0x1"
-        }]);
-        console.log(tx)
+
+
+            // send  tx that nonce+100
+        let sendNonce = nonce +100;
+        try {
+            let tx =  await ethers.provider.getSigner(0).sendTransaction( {
+                to: "0x0c1efcca2bcb65a532274f3ef24c044ef4ab6d73",
+                value: "0x1",
+                data:'0x',
+                maxFeePerGas:"0x1111",
+                maxPriorityFeePerGas:"0x1",
+                nonce:sendNonce,
+            });
+            let response = await tx.wait(1)
+            console.log(response)
+        }catch (e){
+            return
+        }
+        expect("").to.be.equal("failed")
+
+
         // 再次查询nonce
     })
 
