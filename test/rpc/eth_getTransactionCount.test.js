@@ -19,7 +19,7 @@ describe("eth_getTransactionCount", function () {
         no0xAndUpperCaseAddress = sendTxAndHaveCkbAddress.substring(2).toUpperCase()
         // init contract address
         contractAddress = await getDeployLogContractAddress()
-        let destructContractAddress  = await getSelfDestructContractAddress()
+        destructContractAddress  = await getSelfDestructContractAddress()
         // let selfDestructPayload =  selfContract.methods.selfDestruct.encodeABI()
         let selfDestructPayload = "0x9cb8a26a"
         await invokeContract(destructContractAddress,selfDestructPayload)
@@ -29,7 +29,7 @@ describe("eth_getTransactionCount", function () {
         console.log('destructContractAddress:',destructContractAddress)
     })
 
-    it("query account that account not have 0x and upper",async function (){
+    it("query account that account not have 0x and upper ,should return 0",async function (){
         //please check
         // hardhat => supplied to : ADDRESS
         // eth => "invalid argument 0: json: cannot unmarshal hex string without 0x prefix into Go value of type common.Address"
@@ -39,14 +39,14 @@ describe("eth_getTransactionCount", function () {
         expect(nonceMap.latestNonce).to.be.not.equal(0)
     })
 
-    it("query account that not  send tx and not have ckb ", async function () {
+    it("query account that not  send tx and not have ckb ,all nonce should return 0", async function () {
         let nonceMap = await eth_getTransactionCount(unSendTxAddress)
         expect(nonceMap.earliestNonce).to.be.equal(0)
         expect(nonceMap.pendingNonce).to.be.equal(0)
         expect(nonceMap.latestNonce).to.be.equal(0)
     })
 
-    it("query account that not send tx but have ckb ", async function () {
+    it("query account that not send tx but have ckb ,blance > 0 ,nonce should return 0", async function () {
         // check address ckb > 0
         let balanceMap = await eth_getBalance(unSendTxAndHaveCkbAddress)
         expect(balanceMap.latestBalance).to.be.not.equal(0)
@@ -57,7 +57,7 @@ describe("eth_getTransactionCount", function () {
         expect(nonceMap.latestNonce).to.be.equal(0)
     })
 
-    it("query account that have ckb and send tx past ", async function () {
+    it("query account that have ckb and send tx past ,pending nonce should > 0,latest Nonce should > 0", async function () {
         let nonceMap = await eth_getTransactionCount(sendTxAndHaveCkbAddress)
         expect(nonceMap.earliestNonce).to.be.equal(0)
         expect(nonceMap.pendingNonce).to.be.not.equal(0)
@@ -65,14 +65,14 @@ describe("eth_getTransactionCount", function () {
 
     })
 
-    it("query account that account is contractAddress", async function () {
+    it("query account that account is contractAddress,earliest should return 0,pending and latest should return 1", async function () {
         let nonceMap = await eth_getTransactionCount(contractAddress)
         expect(nonceMap.earliestNonce).to.be.equal(0)
-        expect(nonceMap.pendingNonce).to.be.equal(0)
-        expect(nonceMap.latestNonce).to.be.equal(0)
+        expect(nonceMap.pendingNonce).to.be.equal(1)
+        expect(nonceMap.latestNonce).to.be.equal(1)
     })
 
-    it("query account that account is destruct contractAddress", async function () {
+    it("query account that account is destruct contractAddress,all nonce should return 0", async function () {
         let nonceMap = await eth_getTransactionCount(destructContractAddress)
         expect(nonceMap.earliestNonce).to.be.equal(0)
         expect(nonceMap.pendingNonce).to.be.equal(0)
