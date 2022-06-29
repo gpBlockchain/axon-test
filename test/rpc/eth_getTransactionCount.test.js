@@ -1,6 +1,6 @@
 const {ethers} = require("hardhat");
 const {expect} = require("chai");
-const {eth_getTransactionCount,eth_getBalance,transferCkb,getDeployLogContractAddress,deploySelfDestructContract,invokeContract} = require("../utils/rpc.js");
+const {eth_getTransactionCount,eth_getBalance,transferCkb,getDeployLogContractAddress,getSelfDestructContractAddress,invokeContract} = require("../utils/rpc.js");
 
 
 describe("eth_getTransactionCount", function () {
@@ -19,11 +19,10 @@ describe("eth_getTransactionCount", function () {
         no0xAndUpperCaseAddress = sendTxAndHaveCkbAddress.substring(2).toUpperCase()
         // init contract address
         contractAddress = await getDeployLogContractAddress()
-        let selfContract  = await deploySelfDestructContract()
+        let destructContractAddress  = await getSelfDestructContractAddress()
         // let selfDestructPayload =  selfContract.methods.selfDestruct.encodeABI()
         let selfDestructPayload = "0x9cb8a26a"
-        let response = await invokeContract(selfContract.address,selfDestructPayload)
-        destructContractAddress = selfContract.address
+        await invokeContract(destructContractAddress,selfDestructPayload)
         console.log('sendTxAndHaveCkbAddress:',sendTxAndHaveCkbAddress)
         console.log('contractAddress:',contractAddress)
         console.log('no0xAndUpperCaseAddress:',no0xAndUpperCaseAddress)

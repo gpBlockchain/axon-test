@@ -1,7 +1,7 @@
 const {ethers} = require("hardhat");
 const {expect} = require("chai");
 const {getDeployLogContractAddress, getFallbackAndReceiveContractAddress,
-    getNoFallbackAndReceiveContractAddress, deployLogContract, deployLogContractAddress, getTestLogSigByTimes,
+    getNoFallbackAndReceiveContractAddress, deployLogContractAddress, getTestLogSigByTimes,
     getFailedTxContractAddress
 } = require("../utils/rpc");
 const {BigNumber} = require("ethers");

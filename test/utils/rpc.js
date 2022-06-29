@@ -68,8 +68,8 @@ async function getEthCallContract(){
     return  await deployContractByContractName("ethCallContract")
 }
 
-async function deploySelfDestructContract() {
-    return deployContractByContractName("selfDestructContract")
+async function getSelfDestructContractAddress() {
+    return await getContractAddress(await deployContractByContractName("selfDestructContract"))
 }
 
 async function deployLogContractAddress() {
@@ -141,7 +141,7 @@ module.exports = {
     eth_getBalance,
     transferCkb,
     getDeployLogContractAddress,
-    deploySelfDestructContract,
+    getSelfDestructContractAddress,
     invokeContract,
     getNonce,
     getFallbackAndReceiveContractAddress,
