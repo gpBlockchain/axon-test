@@ -1,7 +1,8 @@
 const {ethers} = require("hardhat");
 const {expect} = require("chai");
 const {getDeployLogContractAddress, getFallbackAndReceiveContractAddress,
-    getNoFallbackAndReceiveContractAddress
+    getNoFallbackAndReceiveContractAddress, deployLogContract, deployLogContractAddress, getTestLogSigByTimes,
+    getFailedTxContractAddress
 } = require("../utils/rpc");
 const {BigNumber} = require("ethers");
 
@@ -712,5 +713,59 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include('0x')
         })
     })
+
+    describe("from have ckb(failed tx)", function () {
+
+        let haveCkbAddress;
+
+        before(async function () {
+            haveCkbAddress = await ethers.provider.getSigner(0).getAddress()
+        })
+        it('will out of gas tx', async () => {
+
+            //deploy logContract
+            let logContractAddress = await deployLogContractAddress()
+
+            // build out of gas tx data
+            let log500000Sig = getTestLogSigByTimes(500000)
+
+            // call out of gas tx
+            try {
+                let ret = await ethers.provider.send('eth_estimateGas',
+                    [{
+                        from: haveCkbAddress,
+                        to: logContractAddress,
+                        data: log500000Sig,
+                    }])
+            }catch (e){
+                console.log(e)
+                expect(e.toString()).to.be.not.include('HeadersTimeoutError')
+                return
+            }
+            expect('').to.be.include('failed')
+        })
+
+        it("revert tx",async ()=>{
+            // deploy contract that contains revert method
+            let contractAddress = await getFailedTxContractAddress();
+            // invoke method that contains revert
+
+            try {
+                //FailedTx_assert()
+                let revertSig = "0xa0f2f484";
+                await ethers.provider.send('eth_estimateGas',
+                    [{
+                        from: haveCkbAddress,
+                        to: contractAddress,
+                        data: revertSig,
+                    }])
+            }catch (e){
+                return
+            }
+            expect("").to.be.include("failed")
+        })
+    })
+
+
 
 })
