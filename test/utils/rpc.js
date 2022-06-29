@@ -31,9 +31,9 @@ async function transferCkb(transferTo, value) {
         to: transferTo,
         value: value,
         data: '0x',
-        // maxFeePerGas: '0xffffffff',
-        // maxPriorityFeePerGas: '0x1',
-        // nonce: nonceOfFrom
+        maxFeePerGas: '0xffffffff',
+        maxPriorityFeePerGas: '0x1',
+        nonce: nonceOfFrom
     })
     await tx.wait(1)
 }
@@ -81,9 +81,9 @@ async function deployContractByContractName(contractName){
     let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
     let contractInfo = await ethers.getContractFactory(contractName);
     return await contractInfo.deploy({
-        // maxFeePerGas: '0xffff',
-        // maxPriorityFeePerGas: '0x1',
-        // nonce: nonceOfFrom
+        maxFeePerGas: '0xffff',
+        maxPriorityFeePerGas: '0x1',
+        nonce: nonceOfFrom
     })
 }
 
@@ -98,9 +98,9 @@ async function invokeContract(contractAddress,payload) {
     let tx = await ethers.provider.getSigner(0).sendTransaction({
         to:contractAddress,
         data: payload,
-        // maxFeePerGas: '0xffff',
-        // maxPriorityFeePerGas: '0x1',
-        // nonce: nonceOfFrom
+        maxFeePerGas: '0xffff',
+        maxPriorityFeePerGas: '0x1',
+        nonce: nonceOfFrom
     })
     let response = await tx.wait(1)
     return response
@@ -116,9 +116,9 @@ async function getNonce(from) {
 async function getAxonParam(){
     let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
     return {
-        // maxFeePerGas: '0xffff',
-        // maxPriorityFeePerGas: '0x1',
-        // nonce: nonceOfFrom
+        maxFeePerGas: '0xffff',
+        maxPriorityFeePerGas: '0x1',
+        nonce: nonceOfFrom
     }
 }
 
@@ -150,7 +150,6 @@ module.exports = {
     deployLogContractAddress,
     getTestLogSigByTimes,
     getFailedTxContractAddress,
-    getEthCallContractAddress,
     getEthCallContract,
     getContractAddress
 }
