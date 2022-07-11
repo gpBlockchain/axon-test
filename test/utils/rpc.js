@@ -110,7 +110,7 @@ async function invokeContract(contractAddress,payload) {
 async function getNonce(from) {
     // bug
     let nonce = await ethers.provider.getTransactionCount(from, 'latest')
-    return nonce + 1
+    return nonce+1
 }
 
 async function getAxonParam(){
@@ -120,6 +120,22 @@ async function getAxonParam(){
         maxPriorityFeePerGas: '0x1',
         nonce: nonceOfFrom
     }
+}
+
+async function getTxReceipt(provider, txHash, count) {
+    let response
+    for (let i = 0; i < count; i++) {
+        response = await provider.getTransactionReceipt(txHash);
+        if (response == null) {
+            await sleep(2000)
+            continue;
+        }
+        if (response.confirmations === 1) {
+            return response
+        }
+        await sleep(2000)
+    }
+    return response
 }
 
 
@@ -137,6 +153,10 @@ function getTestLogSigByTimes(number) {
     return logSig;
 }
 
+async function sleep(timeOut){
+    await new Promise(r => setTimeout(r, timeOut));
+}
+
 module.exports = {
     eth_getTransactionCount,
     eth_getBalance,
@@ -151,5 +171,6 @@ module.exports = {
     getTestLogSigByTimes,
     getFailedTxContractAddress,
     getEthCallContract,
-    getContractAddress
+    getContractAddress,
+    getTxReceipt
 }
