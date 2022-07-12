@@ -26,14 +26,14 @@ async function eth_getBalance1(queryAddress, blockNum) {
 }
 
 async function transferCkb(transferTo, value) {
-    let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
+    // let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
     let tx = await ethers.provider.getSigner(0).sendTransaction({
         to: transferTo,
         value: value,
         data: '0x',
-        maxFeePerGas: '0xffffffff',
-        maxPriorityFeePerGas: '0x1',
-        nonce: nonceOfFrom
+        // maxFeePerGas: '0xffffffff',
+        // maxPriorityFeePerGas: '0x1',
+        // nonce: nonceOfFrom
     })
     await tx.wait(1)
 }
@@ -49,7 +49,7 @@ async function getFallbackAndReceiveContractAddress() {
 }
 
 async function getNoFallbackAndReceiveContractAddress() {
-    let contract = await deployContractByContractName("NoFallbackAndReceive")
+    let contract = await deployContractByContractName("contracts/noFallbackAndReceive.sol:NoFallbackAndReceive")
     return await getContractAddress(contract)
 }
 
@@ -78,12 +78,12 @@ async function deployLogContractAddress() {
 }
 
 async function deployContractByContractName(contractName){
-    let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
+    // let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
     let contractInfo = await ethers.getContractFactory(contractName);
     return await contractInfo.deploy({
-        maxFeePerGas: '0xffff',
-        maxPriorityFeePerGas: '0x1',
-        nonce: nonceOfFrom
+        // maxFeePerGas: '0xffff',
+        // maxPriorityFeePerGas: '0x1',
+        // nonce: nonceOfFrom
     })
 }
 
@@ -94,13 +94,13 @@ async function getContractAddress(contract){
 }
 
 async function invokeContract(contractAddress,payload) {
-    let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
+    // let nonceOfFrom = await getNonce(ethers.provider.getSigner(0).getAddress())
     let tx = await ethers.provider.getSigner(0).sendTransaction({
         to:contractAddress,
         data: payload,
-        maxFeePerGas: '0xffff',
-        maxPriorityFeePerGas: '0x1',
-        nonce: nonceOfFrom
+        // maxFeePerGas: '0xffff',
+        // maxPriorityFeePerGas: '0x1',
+        // nonce: nonceOfFrom
     })
     let response = await tx.wait(1)
     return response

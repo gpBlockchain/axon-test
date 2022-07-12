@@ -25,7 +25,6 @@ describe("self destructContractTest.js self destruct ", function () {
         let receipt = await tx.wait();
         console.log("receipt:", receipt)
     })
-    //get_selfdestructContract_code
 
     it("invoke get code ", async () => {
         let code = await contract.get_selfdestructContract_code(false, "0x5fbdb2315678afecb367f032d93f642f64180aa3");

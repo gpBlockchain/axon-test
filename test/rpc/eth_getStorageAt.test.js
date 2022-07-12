@@ -88,7 +88,7 @@ describe("eth_getStorageAt", function () {
             expect('').to.be.equal('failed')
         })
 
-        it('destruct contract ,should return 0x0 ',async ()=>{
+        it('destruct contract , query  slot that existed before  ,should return 0x0 ',async ()=>{
             //deploy contract
             let contractInfo = await ethers.getContractFactory("StorageContract")
             let StorageContract1 = await contractInfo.deploy()
