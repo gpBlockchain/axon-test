@@ -74,7 +74,7 @@ async function getSelfDestructContractAddress() {
 }
 
 async function deployLogContractAddress() {
-    return await getContractAddress(await deployContractByContractName("LogContract"))
+    return await getContractAddress(await deployContractByContractName("contracts/LogContract.sol:LogContract"))
 }
 
 async function deployContractByContractName(contractName){
@@ -172,5 +172,6 @@ module.exports = {
     getFailedTxContractAddress,
     getEthCallContract,
     getContractAddress,
-    getTxReceipt
+    getTxReceipt,
+    deployContractByContractName
 }
