@@ -63,7 +63,7 @@ describe("eth_getStorageAt", function () {
             let tx = await StorageContract.StoragePos0(1235, 5678)
             await tx.wait()
             let height = await ethers.provider.getBlockNumber()
-            let response = await ethers.provider.send('eth_getStorageAt', [StorageContract.address, '0x0', BigNumber.from(height).toHexString()])
+            let response = await ethers.provider.send('eth_getStorageAt', [StorageContract.address, '0x0', BigNumber.from(height).toHexString().response('0x0','0x')])
             expect(response).to.be.equal('0x00000000000000000000000000000000000000000000000000000000000004d3')
         })
 

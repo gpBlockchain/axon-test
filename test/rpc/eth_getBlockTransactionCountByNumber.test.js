@@ -10,7 +10,7 @@ describe("eth_getBlockTransactionCountByHash", function () {
         // get latest blockHash
         let block = await ethers.provider.getBlock('latest');
         // get tx count
-        let txNum =await ethers.provider.send('eth_getBlockTransactionCountByNumber',[block.number]);
+        let txNum =await ethers.provider.send('eth_getBlockTransactionCountByNumber',[BigNumber.from(block.number).toHexString()]);
         expect(BigNumber.from(block.transactions.length).toHexString()).to.be.include(txNum)
     })
 

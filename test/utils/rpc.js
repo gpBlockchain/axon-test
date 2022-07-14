@@ -54,7 +54,7 @@ async function getNoFallbackAndReceiveContractAddress() {
 }
 
 async function getFailedTxContractAddress(){
-    let contract = await deployContractByContractName("FailedTxContract")
+    let contract = await deployContractByContractName("contracts/failedTxContract.0.8.4.sol:FailedTxContract")
     return await getContractAddress(contract)
 }
 
@@ -157,6 +157,52 @@ async function sleep(timeOut){
     await new Promise(r => setTimeout(r, timeOut));
 }
 
+async function getGasPrice(provider) {
+    let gasPrice = await provider.getGasPrice();
+    if (gasPrice < 16) {
+        return "0x" + gasPrice._hex.toLowerCase().replaceAll("0x0", "");
+    }
+    return gasPrice.toHexString().replaceAll("0x0", "0x");
+}
+
+
+async function sendTxToAddBlockNum(provider, blockNum) {
+
+    let endNum = await provider.getBlockNumber() + blockNum;
+    let currentNum = await provider.getBlockNumber();
+    console.log("currentNum:", currentNum, " end:", endNum)
+    let contractAddress = await ethers.provider.getSigner(0).getAddress()
+    while (currentNum < endNum) {
+        let txCount = provider.getTransactionCount(contractAddress);
+        console.log(contractAddress, " count:", await txCount)
+        await sendRandomTx(provider)
+        currentNum = await provider.getBlockNumber();
+        console.log("currentNum:", currentNum, " end:", endNum)
+    }
+    console.log("curren block num:", endNum)
+}
+
+
+async function sendRandomTx(provider) {
+    let logContract = await ethers.getContractFactory("eventDeployLogContract");
+    try {
+        await provider.send("eth_sendTransaction", [{
+            "data": logContract.bytecode
+        }]);
+    } catch (e) {
+    }
+}
+
+
+
+
+function BigInterToHexString(bn) {
+    if (bn < 16) {
+        return "0x" + bn.toHexString().replaceAll("0x0", "");
+    }
+    return bn.toHexString().replaceAll("0x0", "0x");
+}
+
 module.exports = {
     eth_getTransactionCount,
     eth_getBalance,
@@ -173,5 +219,8 @@ module.exports = {
     getEthCallContract,
     getContractAddress,
     getTxReceipt,
-    deployContractByContractName
+    deployContractByContractName,
+    BigInterToHexString,
+    getGasPrice,
+    sendTxToAddBlockNum
 }
