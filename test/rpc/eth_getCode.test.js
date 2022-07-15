@@ -1,7 +1,7 @@
 const {ethers} = require("hardhat");
 const {expect} = require("chai");
 const {BigNumber} = require("ethers");
-const {deployLogContractAddress, deployContractByContractName} = require("../utils/rpc");
+const { deployContractByContractName} = require("../utils/rpc");
 
 describe("eth_getCode", function () {
     this.timeout(600000)

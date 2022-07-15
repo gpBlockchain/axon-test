@@ -10,7 +10,7 @@ contract BlockMsgContract {
     uint256 public number;
     uint256 public timestamp;
 
-    event blockHashEvent(bytes32);
+    event blockHashEvent(bytes32,uint256);
 
 
     function getBlockHashEventTopre256() public {
@@ -19,7 +19,7 @@ contract BlockMsgContract {
             if (i > beginNum) {
                 return;
             }
-            emit blockHashEvent(blockhash(beginNum - i));
+            emit blockHashEvent(blockhash(beginNum - i),beginNum - i);
         }
     }
 
@@ -39,8 +39,10 @@ contract BlockMsgContract {
         return (blkHashs,block.number);
     }
 
+
+
     function getBlockHash(uint256 number) public {
-        emit blockHashEvent(blockhash(number));
+        emit blockHashEvent(blockhash(number),number);
     }
 
     function update_block_msg() public {

@@ -24,6 +24,36 @@ contract eventTestContract{
         }
     }
 
+    function testLog1(uint256 logCount) public {
+        for(uint256 i=0;i<logCount;i++){
+            log1(bytes32(0),bytes32(0));
+        }
+    }
+
+    function testLog2(uint256 logCount) public {
+        for(uint256 i=0;i<logCount;i++){
+            log2(bytes32(0),bytes32(0),bytes32(0));
+        }
+    }
+
+    function testLog3(uint256 logCount) public {
+        for(uint256 i=0;i<logCount;i++){
+            log3(bytes32(0),bytes32(0),bytes32(0),bytes32(0));
+        }
+    }
+
+    function testLog4(uint256 logCount) public {
+        for(uint256 i=0;i<logCount;i++){
+            log4(
+                bytes32(0x0000000000000000000000000000000000000000000000000000000000000000),
+                bytes32(0x0000000000000000000000000000000000000000000000000000000000000001),
+                bytes32(0x0000000000000000000000000000000000000000000000000000000000000002),
+                bytes32(0x0000000000000000000000000000000000000000000000000000000000000003),
+                bytes32(0x0000000000000000000000000000000000000000000000000000000000000004)
+            );
+        }
+    }
+
 
     function() external payable {}
 

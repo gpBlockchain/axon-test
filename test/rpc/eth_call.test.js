@@ -268,50 +268,6 @@ describe("eth_call", function () {
 
         })
 
-        it("gas  eq estimateGas-1,should return 0x", async () => {
-
-            let estimateGas = await ethers.provider.send('eth_estimateGas',
-                [{
-                    from: haveCkbAddress,
-                    to: normalEoaAddress,
-                    data: '0x',
-                }])
-
-            // test gas = estimateGas -1
-            let testGas = estimateGas - 1
-            let ret2 = await ethers.provider.send('eth_call',
-                [{
-                    from: haveCkbAddress,
-                    to: normalEoaAddress,
-                    data: '0x',
-                    gas: "0x" + testGas.toString(16)
-                }, 'latest'])
-
-            expect(ret2).to.be.include('0x')
-        })
-        it("gas  eq estimateGas-2,eth_call should return error msg", async () => {
-            let estimateGas = await ethers.provider.send('eth_estimateGas',
-                [{
-                    from: haveCkbAddress,
-                    to: normalEoaAddress,
-                    data: '0x',
-                }])
-            try {
-
-                await ethers.provider.send('eth_call',
-                    [{
-                        from: haveCkbAddress,
-                        to: normalEoaAddress,
-                        data: '0x',
-                        gas: "0x" + (estimateGas - 2).toString(16)
-                    }, 'latest'])
-            } catch (e) {
-                return
-            }
-            expect('').to.be.include('failed')
-
-        })
-
         it("gas is null,should return 0x ", async () => {
 
             let ret = await ethers.provider.send('eth_call',
@@ -406,17 +362,22 @@ describe("eth_call", function () {
             expect(ret).to.be.include('0x')
         })
 
-        it('value >  from balance ,should return 0x', async () => {
+        it('value >  from balance ,should return error msg', async () => {
             //todo  value
             let fromBalance = await ethers.provider.getBalance(haveCkbAddress)
-            let ret = await ethers.provider.send('eth_call',
-                [{
-                    from: haveCkbAddress,
-                    to: normalEoaAddress,
-                    data: '0x',
-                    value: fromBalance.mul(BigNumber.from('1000000')).toHexString().replace('0x0', '0x'),
-                }, 'latest'])
-            expect(ret).to.be.include('0x')
+            try {
+
+                let ret = await ethers.provider.send('eth_call',
+                    [{
+                        from: haveCkbAddress,
+                        to: normalEoaAddress,
+                        data: '0x',
+                        value: fromBalance.mul(BigNumber.from('1000000')).toHexString().replace('0x0', '0x'),
+                    }, 'latest'])
+            }catch (e){
+                return
+            }
+            expect('').to.be.equal('failed')
         })
         it('value is null ,should return 0x', async () => {
             //todo  value
@@ -552,7 +513,7 @@ describe("eth_call", function () {
             expect(ret).to.be.include('0x')
         })
 
-        it('gasPrice very big  (exceed MAX_INTEGER (2^256-1)),should return error msg ', async () => {
+        it.skip('gasPrice very big  (exceed MAX_INTEGER (2^256-1)),should return error msg ', async () => {
             // todo check
             // axon succ
             // hardhat failed

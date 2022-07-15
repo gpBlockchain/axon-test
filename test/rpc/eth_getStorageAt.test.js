@@ -11,6 +11,7 @@ describe("eth_getStorageAt", function () {
     })
 
     it('not exist address very large idx  , should return 0x0', async () => {
+        //todo check axon result return failed or return 0x
         let data = await ethers.provider.send('eth_getStorageAt', [notExistAddress, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 'latest'])
         expect(data).to.be.include('0x')
     })
@@ -43,7 +44,8 @@ describe("eth_getStorageAt", function () {
         })
 
         it('exist slot ,query in pending time,should return data eq latest', async () => {
-            let tx = await StorageContract.StoragePos0(1234, 5678)
+            // axon need mod gasLimit
+            let tx = await StorageContract.StoragePos0(1234, 5678,{gasLimit:6000000})
             await tx.wait()
             let slot00DataLatest = await ethers.provider.send('eth_getStorageAt', [StorageContract.address, '0x0', 'latest'])
             let slot00DataPending = await ethers.provider.send('eth_getStorageAt', [StorageContract.address, '0x0', 'pending'])
@@ -51,7 +53,7 @@ describe("eth_getStorageAt", function () {
         })
 
         it('earliest time ,should return 0x0', async () => {
-            let tx = await StorageContract.StoragePos0(1234, 5678)
+            let tx = await StorageContract.StoragePos0(1234, 5678,{gasLimit:6000000})
             await tx.wait()
             let slot00DataLatest = await ethers.provider.send('eth_getStorageAt', [StorageContract.address, '0x0', 'latest'])
             let slot00DataEarliest = await ethers.provider.send('eth_getStorageAt', [StorageContract.address, '0x0', 'earliest'])
@@ -60,10 +62,10 @@ describe("eth_getStorageAt", function () {
         })
 
         it('query block height = max blockHeight ,should return error msg  ', async () => {
-            let tx = await StorageContract.StoragePos0(1235, 5678)
+            let tx = await StorageContract.StoragePos0(1235, 5678,{gasLimit:6000000})
             await tx.wait()
             let height = await ethers.provider.getBlockNumber()
-            let response = await ethers.provider.send('eth_getStorageAt', [StorageContract.address, '0x0', BigNumber.from(height).toHexString().response('0x0','0x')])
+            let response = await ethers.provider.send('eth_getStorageAt', [StorageContract.address, '0x0', BigNumber.from(height).toHexString().replace('0x0','0x')])
             expect(response).to.be.equal('0x00000000000000000000000000000000000000000000000000000000000004d3')
         })
 
@@ -113,7 +115,7 @@ describe("eth_getStorageAt", function () {
             // mod 0,10
             let txReceiptList = []
             for (let i = 0; i < 3; i++) {
-                let tx = await StorageContract.StoragePos0(1235+i, 5678)
+                let tx = await StorageContract.StoragePos0(1235+i, 5678,{gasLimit:6000000})
                 let receipt = await tx.wait()
                 txReceiptList.push(receipt)
             }

@@ -21,12 +21,11 @@ describe("getTransactionByBlockNumberAndIndex", function () {
 
         it("not exist block num overflow  larger than int64(https://github.com/nervosnetwork/godwoken-web3/issues/269)", async () => {
             try {
-                await ethers.provider.send("eth_getTransactionByBlockNumberAndIndex", ["0xffffffffffffffff", "0x0"])
+                await ethers.provider.send("eth_getTransactionByBlockNumberAndIndex", ["0xfffffffffffffffffffffffffffffffffffff", "0x0"])
 
             }catch (e){
                 return
             }
-
             expect('').to.be.equal('failed')
         }).timeout(50000)
 
@@ -46,6 +45,7 @@ describe("getTransactionByBlockNumberAndIndex", function () {
     describe("exist num ,idx", async () => {
 
         it("empty txs block ", async () => {
+            //todo check axon result
             let tx = await ethers.provider.send("eth_getTransactionByBlockNumberAndIndex", ["0x0", "0x0"])
             expect(tx).to.be.equal(null)
         })

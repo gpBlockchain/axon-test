@@ -26,7 +26,6 @@ describe("opcode_code.js opcode -code ", function () {
             await contract.storeData(33, 4, 32);
         } catch (e) {
             //'gas required exceeds allowance (50000000)'
-
             return
         }
         expect('').to.be.include('failed')

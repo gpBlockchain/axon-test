@@ -45,7 +45,7 @@ describe("fallback and receive", function () {
             }])
 
             // check receipt contains receiveLogSig log
-            const receipt = await getTxReceipt(ethers.provider, result, 10)
+            const receipt = await getTxReceipt(ethers.provider, result, 100)
             expect(checkTxContainsLog(receipt, receiveLogSig)).to.be.equal(true)
 
             // check transfer pass
@@ -61,7 +61,7 @@ describe("fallback and receive", function () {
             }])
 
             // check receipt contains receiveLogSig log
-            const receipt = await getTxReceipt(ethers.provider, result, 10)
+            const receipt = await getTxReceipt(ethers.provider, result, 100)
             expect(checkTxContainsLog(receipt, receiveLogSig)).to.be.equal(true)
 
         })
@@ -115,7 +115,7 @@ describe("fallback and receive", function () {
                 "gas": "0xffffff",
                 "value": "0x11",
             }])
-            const receipt = await getTxReceipt(ethers.provider, result, 20)
+            const receipt = await getTxReceipt(ethers.provider, result, 100)
 
             // check is
             expect(checkTxContainsLog(receipt, fallbackLogSig)).to.be.equal(true)
@@ -126,7 +126,7 @@ describe("fallback and receive", function () {
             let result = await ethers.provider.send("eth_sendTransaction", [{
                 "to": fallbackAndReceiveOnlyHaveFallbackContract.address, "data": "0xffffffff", "gas": "0xffffff",
             }])
-            const receipt = await getTxReceipt(ethers.provider, result, 10)
+            const receipt = await getTxReceipt(ethers.provider, result, 100)
 
             // check invoke fallback
             expect(checkTxContainsLog(receipt, fallbackLogSig)).to.be.equal(true)
@@ -160,7 +160,7 @@ describe("fallback and receive", function () {
             let result = await ethers.provider.send("eth_sendTransaction", [{
                 "to": noFallbackAndReceive.address, "data": "0x", "gas": "0xffffff", "value": "0x11",
             }])
-            const receipt = await getTxReceipt(ethers.provider, result, 20)
+            const receipt = await getTxReceipt(ethers.provider, result, 200)
 
             // check tx is failed
             expect(receipt.status).to.be.equal(0)

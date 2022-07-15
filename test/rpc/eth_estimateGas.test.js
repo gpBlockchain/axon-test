@@ -261,50 +261,6 @@ describe("eth_estimateGas", function () {
             expect(estimateGas).to.be.include(estimateGas2)
         })
 
-        it("gas  eq estimateGas-1,should return gasCost ,gasCost = estimateGas", async () => {
-
-            let estimateGas = await ethers.provider.send('eth_estimateGas',
-                [{
-                    from: haveCkbAddress,
-                    to: normalEoaAddress,
-                    data: '0x',
-                }])
-
-            // test gas = estimateGas -1
-            let testGas = estimateGas - 1
-            let estimateGas2 = await ethers.provider.send('eth_estimateGas',
-                [{
-                    from: haveCkbAddress,
-                    to: normalEoaAddress,
-                    data: '0x',
-                    gas: "0x" + testGas.toString(16)
-                }])
-
-            expect(estimateGas2).to.be.include(estimateGas)
-        })
-        it("gas  eq estimateGas-2,should return error msg", async () => {
-
-            try {
-                let estimateGas = await ethers.provider.send('eth_estimateGas',
-                    [{
-                        from: haveCkbAddress,
-                        to: normalEoaAddress,
-                        data: '0x',
-                    }])
-                let estimateGas2 = await ethers.provider.send('eth_estimateGas',
-                    [{
-                        from: haveCkbAddress,
-                        to: normalEoaAddress,
-                        data: '0x',
-                        gas: "0x" + (estimateGas - 2).toString(16)
-                    }])
-            } catch (e) {
-                return
-            }
-            expect('').to.be.include('failed')
-
-        })
-
         it("gas is null,should return gasCost", async () => {
 
             let estimateGas = await ethers.provider.send('eth_estimateGas',

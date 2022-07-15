@@ -18,8 +18,9 @@ describe("eth_getBlockByNumber", function () {
     })
 
     it("overflow not exist number => invalid argument 0: block number larger than int64", async () => {
+        //todo check
         try{
-            await ethers.provider.send("eth_getBlockByNumber", ["0xffffffffffffffff", true])
+            await ethers.provider.send("eth_getBlockByNumber", ["0xffffffffffffffffffffffffffffffffffffff", true])
         }catch (e){
             return
         }

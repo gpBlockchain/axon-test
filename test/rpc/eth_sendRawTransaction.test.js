@@ -23,11 +23,25 @@ describe("eth_sendRawTransaction ", function () {
                 "gas": "0x76c000",
                 "gasPrice": gasPrice,
                 "value": "0x9184e72a",
-                "data": "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675"
             }]);
             expect(tx).to.be.include('0x')
             await getTxReceipt(ethers.provider,tx,100)
-        }).timeout(5000)
+        })
+
+        it("to is EOA Address transfer(1559), should return hash", async () => {
+            let gasPrice = await getGasPrice(ethers.provider);
+            console.log("gasPrice:", gasPrice)
+            let tx = await ethers.provider.send("eth_sendTransaction", [{
+                "to": "0x0c1efcca2bcb65a532274f3ef24c044ef4ab6d73",
+                "gas": "0x5208",
+                maxFeePerGas: '0xffff',
+                maxPriorityFeePerGas: '0x1',
+                "value": "0x9184e72a",
+                // "data": "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675"
+            }]);
+            expect(tx).to.be.include('0x')
+            await getTxReceipt(ethers.provider,tx,100)
+        })
 
         it("to is not exist Address,should return txHash", async () => {
             let tx = await ethers.provider.send("eth_sendTransaction", [{
@@ -184,6 +198,7 @@ describe("eth_sendRawTransaction ", function () {
                 console.log("response :", response)
                 let txInfo = await ethers.provider.getTransaction(tx)
                 console.log("txInfo:", txInfo)
+                await txInfo.wait()
             } catch (e) {
                 return
             }
@@ -204,7 +219,7 @@ describe("eth_sendRawTransaction ", function () {
             let response = await getTxReceipt(ethers.provider, tx, 20)
             let txMsg = await ethers.provider.getTransaction(tx)
             let afterDeployBalance = await ethers.provider.getBalance(account0Address)
-            expect(beforeDeployBalance.sub(response.gasUsed.mul(txMsg.gasPrice))).to.be.equal(afterDeployBalance);
+            expect(afterDeployBalance).to.be.equal(beforeDeployBalance.sub(response.gasUsed.mul(txMsg.gasPrice)));
         })
 
         it("value is 500 =>  to+500 ,from -500", async () => {
@@ -357,7 +372,7 @@ describe("eth_sendRawTransaction ", function () {
                     return
                 }
                 expect("").to.be.equal("failed")
-            })
+            }).timeout(20000)
         })
 
     })

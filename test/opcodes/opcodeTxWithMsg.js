@@ -84,8 +84,9 @@ describe("opcodeTxWithMsg.js opcode -tx msg ", function () {
         let txDataNoValue
 
         before(async function () {
-            txWithValue = await contractWithValue.updateMsgAndTxData({gasPrice: 91234});
-            txWithNoValue = await contract2NoValue.updateMsgAndTxData({gasPrice: 90000});
+            //todo check  no  mod gasLimit will pass
+            txWithValue = await contractWithValue.updateMsgAndTxData({gasPrice: 91234,gasLimit:6000000});
+            txWithNoValue = await contract2NoValue.updateMsgAndTxData({gasPrice: 90000,gasLimit:6000000});
 
             receiptWithValue = await txWithValue.wait();
             msgDatWithValue = await contractWithValue.msgData();

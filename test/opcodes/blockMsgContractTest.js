@@ -21,14 +21,18 @@ describe("BlockMsgContractTest.js opcode -blockchain -block ", function () {
 
     it("Verify the blockhash of the past 256 blocks by log", async () => {
 
-        let tx = await contract.getBlockHashEventTopre256()
+        let tx = await contract.getBlockHashEventTopre256({gasLimit:2000000})
         let receipt = await tx.wait()
+
+
 
         for (let i = 0; i < receipt.events.length; i++) {
             if (i < 2 || i >= 258) {
                 expect(receipt.events[i].args[0]).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
             } else {
                 expect(receipt.events[i].args[0]).to.be.not.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
+                await checkBlockNumAndHash(receipt.events[i].args[0],receipt.events[i].args[1])
+
             }
         }
 
@@ -58,7 +62,7 @@ describe("BlockMsgContractTest.js opcode -blockchain -block ", function () {
 
         before(async function () {
             let tx = await contract.update_block_msg()
-            let updateBlockMsgTxReceipt = await tx.wait(2)
+            let updateBlockMsgTxReceipt = await tx.wait()
             ethCallBlockData = await contract.get_block_data()
             updateBlockMsg = await ethers.provider.getBlock(updateBlockMsgTxReceipt.blockNumber)
         })
@@ -66,6 +70,8 @@ describe("BlockMsgContractTest.js opcode -blockchain -block ", function () {
 
         it("check blockHash", async () => {
             // updateBlockMsgTxReceipt.blockHash => blockHash(blockNumber-1)
+            let blockMsg = await ethers.provider.getBlock(ethCallBlockData[0])
+            console.log('blockMsg')
             expect(ethCallBlockData[0]).to.be.equal(updateBlockMsg.parentHash)
         })
 
@@ -98,3 +104,9 @@ describe("BlockMsgContractTest.js opcode -blockchain -block ", function () {
     })
 
 })
+
+async function checkBlockNumAndHash(blockHash, blockNum) {
+    let block = await ethers.provider.getBlock(blockHash)
+    expect(block.number).to.be.equal(blockNum)
+
+}
