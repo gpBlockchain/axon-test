@@ -138,6 +138,10 @@ contract FailedTxContract {
     uint256 public Create2LatestUpdateTime;
 
     error error1();
+    fallback() external payable {
+    }
+    receive() external payable {
+    }
 
     // FailedTxContract
     enum ModDataStyle{
@@ -169,18 +173,17 @@ contract FailedTxContract {
     FailedTxContract public failedTxContract;
     FailedTxContract public destructFailedTxContract;
 
-    EIP20Interface public erc20Token;
     FactoryAssembly public factoryAssemblyContract;
     constructor() public {
         factoryAssemblyContract = new FactoryAssembly();
     }
 
-    function prepare(address failedTxContractAddress, address destructContractAddress, address erc20Address) public payable {
+    function prepare(address payable failedTxContractAddress,address payable destructContractAddress) public payable  {
         failedTxContract = FailedTxContract(failedTxContractAddress);
-        erc20Token = EIP20Interface(erc20Address);
         destructFailedTxContract = FailedTxContract(destructContractAddress);
-        erc20Token.transfer(destructContractAddress, address(this).balance / 2);
+        payable(destructContractAddress).transfer(address(this).balance/2);
     }
+
 
 
     function test(ModDataStyle[] memory modDataStyles, FailedStyle failedStyle) public {
@@ -199,9 +202,7 @@ contract FailedTxContract {
             (sha3Hash,,,,,,) = getCrossNormalData();
             return sha3Hash;
         }
-        if (modDataStyle == ModDataStyle.BRIDGE_TRANSFER) {
-            (sha3Hash,,) = getBridgeData();
-        }
+
         if (modDataStyle == ModDataStyle.SELF_DESTRUCT) {
             sha3Hash = getModSelfDestruct();
         }
@@ -227,11 +228,7 @@ contract FailedTxContract {
             return;
 
         }
-        if (modDataStyle == ModDataStyle.BRIDGE_TRANSFER) {
-            modBridgeTransferData();
-            return;
 
-        }
         if (modDataStyle == ModDataStyle.SELF_DESTRUCT) {
             modSelfDestruct();
             return;
@@ -405,25 +402,6 @@ contract FailedTxContract {
         return (normalHash, normalDataLatestUpdateTime, normalIdx, normalStrMap[normalIdx], normalStrMap[nextIdx], normalUint256Array, normalData);
     }
 
-    event modBridgeTransferDataEvent(uint256 modTime, uint256 sudtId, uint256 modBalance);
-
-    function modBridgeTransferData() public {
-        erc20Token.transfer(address(failedTxContract), 1);
-        BridgeTransferLatestUpdateTime = block.timestamp;
-        emit modBridgeTransferDataEvent(BridgeTransferLatestUpdateTime, 0, erc20Token.balanceOf(address(failedTxContract)));
-    }
-
-    function getBridgeData() public view returns (bytes32, uint256, uint256){
-        bytes32 bridgeTransferHash = keccak256(abi.encodePacked
-            (
-                BridgeTransferLatestUpdateTime,
-                erc20Token.balanceOf(address(this)),
-                erc20Token.balanceOf(address(failedTxContract))
-            )
-        );
-        return (bridgeTransferHash, erc20Token.balanceOf(address(this)), erc20Token.balanceOf(address(failedTxContract)));
-    }
-
 
     // 通过普通跨合约调用修改
     event modCrossNormalDataEvent(uint256 modTime, uint256 modIdx, string modData);
@@ -507,5 +485,6 @@ contract FailedTxContract {
         );
         return (create2Hash, create2_address);
     }
+
 
 }
