@@ -133,6 +133,10 @@ contract FailedTxContract{
     uint256 public BridgeTransferLatestUpdateTime;
 
     uint256 public Create2LatestUpdateTime;
+    fallback() external payable {
+    }
+    receive() external payable {
+    }
 
     // FailedTxContract
     enum ModDataStyle{
@@ -170,11 +174,10 @@ contract FailedTxContract{
         factoryAssemblyContract = new FactoryAssembly();
     }
 
-    function prepare(address failedTxContractAddress,address destructContractAddress,address erc20Address) public payable  {
+    function prepare(address payable failedTxContractAddress,address payable destructContractAddress) public payable  {
         failedTxContract = FailedTxContract(failedTxContractAddress);
-        erc20Token = EIP20Interface(erc20Address);
         destructFailedTxContract = FailedTxContract(destructContractAddress);
-        erc20Token.transfer(destructContractAddress,address(this).balance/2);
+        payable(destructContractAddress).transfer(address(this).balance/2);
     }
 
 
@@ -492,5 +495,6 @@ contract FailedTxContract{
         );
         return (create2Hash,create2_address);
     }
+
 
 }

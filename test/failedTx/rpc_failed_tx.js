@@ -31,14 +31,18 @@ describe("Failed commit tx", function () {
     this.timeout(10000000)
     let failedContract070;
     let failedContract080;
+
     before(async function () {
+        console.log('070')
         failedContract070 = await prepareFailedTxContract("contracts/failedTx/failedTxContract0.7.0.sol:FailedTxContract")
+        console.log('080')
         failedContract080 = await prepareFailedTxContract("contracts/failedTx/failedTxContract.0.8.4.sol:FailedTxContract")
 
     });
 
     it("normal tx will change the world(0.7.0)", async () => {
-        let response1 = await invoke_before_test_after(failedContract070, [0, 1, 2, 4, 5], 0, false, true, 2)
+        console.log('-------')
+        let response1 = await invoke_before_test_after(failedContract070, [0], 0, false, true, 2)
         for (let i = 0; i < response1.afterModArray.length; i++) {
             expect(response1.afterModArray[i]).to.be.not.equal(response1.beforeModArray[i])
         }
@@ -46,7 +50,7 @@ describe("Failed commit tx", function () {
     })
 
     it("normal tx will change the world(0.8.0)", async () => {
-        let response1 = await invoke_before_test_after(failedContract080, [0, 1, 2, 4, 5], 0, false, true, 2)
+        let response1 = await invoke_before_test_after(failedContract080, [0, 1, 4, 5], 0, false, true, 2)
         for (let i = 0; i < response1.afterModArray.length; i++) {
             expect(response1.afterModArray[i]).to.be.not.equal(response1.beforeModArray[i])
         }
@@ -72,10 +76,6 @@ describe("Failed commit tx", function () {
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
         })
 
-        it("1. ModDataStyle.NORMAL, ModDataStyle.CROSS_NORMAL ModDataStyle.BRIDGE_TRANSFER 2.FailedStyle.ASSERT01", async () => {
-            let response = await invoke_before_test_after(failedContract070, [0, 1, 2], 2, true, true)
-            expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
-        })
 
         // it("自毁合约", async () => {
         //     //no
@@ -84,18 +84,18 @@ describe("Failed commit tx", function () {
         // })
 
         it("1. ModDataStyle.NORMAL, ModDataStyle.CROSS_NORMAL ModDataStyle.BRIDGE_TRANSFER,ModDataStyle.CREATE2 ModDataStyle. 2.FailedStyle.ASSERT01", async () => {
-            let response = await invoke_before_test_after(failedContract070, [0, 1, 2, 4], 2, true, true)
+            let response = await invoke_before_test_after(failedContract070, [0, 1, 4], 2, true, true)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
         })
 
         it("1. ModDataStyle.NORMAL, ModDataStyle.CROSS_NORMAL ModDataStyle.BRIDGE_TRANSFER,ModDataStyle.CREATE2,ModDataStyle.DELEGATE_CALL 2.FailedStyle.ASSERT01", async () => {
-            let response = await invoke_before_test_after(failedContract070, [0, 1, 2, 4, 5], 2, true, true)
+            let response = await invoke_before_test_after(failedContract070, [0, 1, 4, 5], 2, true, true)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
 
         })
 
         it("1. ModDataStyle.NORMAL, ModDataStyle.CROSS_NORMAL ModDataStyle.BRIDGE_TRANSFER,ModDataStyle.CREATE2,ModDataStyle.DELEGATE_CALL,ModDataStyle.CLS_DESTRUCT 2.FailedStyle.ASSERT01", async () => {
-            let response = await invoke_before_test_after(failedContract070, [0, 1, 2, 4, 5, 6], 2, true, true)
+            let response = await invoke_before_test_after(failedContract070, [0, 1,  4, 5, 6], 2, true, true)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
         })
     })
@@ -133,50 +133,50 @@ describe("Failed commit tx", function () {
         //Revert on assertion failures and similar conditions instead of using the invalid opcode.
 
         it("Revert 0x01", async () => {
-            let response = await invoke_before_test_after(failedContract080, [0, 1, 2, 4, 5, 6], 2, true, false)
+            let response = await invoke_before_test_after(failedContract080, [0, 1,  4, 5, 6], 2, true, false)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
         })
 
         it("Revert 0x11", async () => {
-            let response = await invoke_before_test_after(failedContract080, [0, 1, 2, 4, 5, 6], 3, true, false)
+            let response = await invoke_before_test_after(failedContract080, [0, 1,  4, 5, 6], 3, true, false)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
         })
 
         it("Revert 0x12", async () => {
-            let response = await invoke_before_test_after(failedContract080, [0, 1, 2, 4, 5, 6], 4, true, false)
+            let response = await invoke_before_test_after(failedContract080, [0, 1,  4, 5, 6], 4, true, false)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
         })
 
         it("Revert 0x21", async () => {
-            let response = await invoke_before_test_after(failedContract080, [0, 1, 2, 4, 5, 6], 5, true, false)
+            let response = await invoke_before_test_after(failedContract080, [0, 1,  4, 5, 6], 5, true, false)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
 
         })
 
         it("Revert 0x22", async () => {
-            let response = await invoke_before_test_after(failedContract080, [0, 1, 2, 4, 5, 6], 6, true, false)
+            let response = await invoke_before_test_after(failedContract080, [0, 1, 4, 5, 6], 6, true, false)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
 
         })
 
         it("Revert 0x31", async () => {
-            let response = await invoke_before_test_after(failedContract080, [0, 1, 2, 4, 5, 6], 7, true, false)
+            let response = await invoke_before_test_after(failedContract080, [0, 1,  4, 5, 6], 7, true, false)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
         })
 
         it("Revert 0x32", async () => {
-            let response = await invoke_before_test_after(failedContract080, [0, 1, 2, 4, 5, 6], 8, true, false)
+            let response = await invoke_before_test_after(failedContract080, [0, 1,  4, 5, 6], 8, true, false)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
         })
 
         it("Revert 0x41", async () => {
-            let response = await invoke_before_test_after(failedContract080, [0, 1, 2, 4, 5, 6], 9, true, false)
+            let response = await invoke_before_test_after(failedContract080, [0, 1,  4, 5, 6], 9, true, false)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
         })
 
         it("Revert 0x51", async () => {
             //todo
-            let response = await invoke_before_test_after(failedContract080, [0, 1, 2, 4, 5, 6], 10, true, false)
+            let response = await invoke_before_test_after(failedContract080, [0, 1,  4, 5, 6], 10, true, false)
             expect(response.beforeModArray.toString()).to.be.equal(response.afterModArray.toString())
         })
     })
@@ -211,13 +211,14 @@ async function prepareFailedTxContract(solFailedTxContractPath) {
     let contractInfo2 = await ethers.getContractFactory(solFailedTxContractPath);
 
     let contract1 = await contractInfo1.deploy()
-    contract = await contractInfo.deploy()
+    let contract = await contractInfo.deploy()
     let contract2 = await contractInfo2.deploy()
     await contract2.deployed();
     await contract.deployed();
     await contract1.deployed();
     //deploy ckb proxy address
     //invoke prepare method
+    await contract.prepare(contract1.address, contract2.address, {"value": "0x123450"})
     return contract;
 }
 
@@ -234,7 +235,7 @@ async function invoke_before_test_after(contract, modTypeArray, illStyle, expect
         await checkResponseOfFailedTx(txHashResponse.hash, expectedIsLow080Panic)
     } else {
         let txHash = await contract.test(modTypeArray, illStyle);
-        await txHash.wait(waitBlockNum)
+        await txHash.wait()
     }
     console.log("check data after invoke failed tx")
     for (let i = 0; i < modTypeArray.length; i++) {
