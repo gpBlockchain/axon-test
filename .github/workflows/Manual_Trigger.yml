@@ -1,4 +1,4 @@
-name: Manual Trigger
+name: Manual Trigger download
 
 on:
   # 手动触发事件
@@ -109,3 +109,11 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+          # upload build test reports
+      - name: Publish reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: jfoa-build-reports-${{ runner.os }}
+          path: mochawesome-report/
+
