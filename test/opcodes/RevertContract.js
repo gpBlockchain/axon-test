@@ -19,7 +19,7 @@ describe("RevertContract.js opcode ", function () {
             await contract.revert1View();
             expect("").to.be.equal("failed")
         } catch (e) {
-            console.log('e.toString():',e.toString())
+            console.log('e.toString():', e.toString())
             expect(e.toString()).to.be.include("1234112341123411234112341123411234112")
         }
     })
@@ -43,7 +43,7 @@ describe("RevertContract.js opcode ", function () {
         try {
             await contract.testRequireBalance()
         } catch (e) {
-            console.log('toString:',e.toString())
+            console.log('toString:', e.toString())
             expect(e.toString()).to.be.contains("ERC20: transfer amount exceeds balance")
             return
         }

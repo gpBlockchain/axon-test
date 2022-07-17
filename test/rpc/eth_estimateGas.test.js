@@ -358,14 +358,14 @@ describe("eth_estimateGas", function () {
             let fromBalance = await ethers.provider.getBalance(haveCkbAddress)
             try {
 
-            let estimateGas = await ethers.provider.send('eth_estimateGas',
-                [{
-                    from: haveCkbAddress,
-                    to: normalEoaAddress,
-                    data: '0x',
-                    value: fromBalance.mul(BigNumber.from('1000000')).toHexString().replace('0x0', '0x'),
-                }])
-            }catch (e){
+                let estimateGas = await ethers.provider.send('eth_estimateGas',
+                    [{
+                        from: haveCkbAddress,
+                        to: normalEoaAddress,
+                        data: '0x',
+                        value: fromBalance.mul(BigNumber.from('1000000')).toHexString().replace('0x0', '0x'),
+                    }])
+            } catch (e) {
                 return
             }
             expect('').to.be.include('0x')

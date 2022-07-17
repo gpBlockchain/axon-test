@@ -21,9 +21,8 @@ describe("BlockMsgContractTest.js opcode -blockchain -block ", function () {
 
     it("Verify the blockhash of the past 256 blocks by log", async () => {
 
-        let tx = await contract.getBlockHashEventTopre256({gasLimit:2000000})
+        let tx = await contract.getBlockHashEventTopre256({gasLimit: 2000000})
         let receipt = await tx.wait()
-
 
 
         for (let i = 0; i < receipt.events.length; i++) {
@@ -31,7 +30,7 @@ describe("BlockMsgContractTest.js opcode -blockchain -block ", function () {
                 expect(receipt.events[i].args[0]).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
             } else {
                 expect(receipt.events[i].args[0]).to.be.not.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
-                await checkBlockNumAndHash(receipt.events[i].args[0],receipt.events[i].args[1])
+                await checkBlockNumAndHash(receipt.events[i].args[0], receipt.events[i].args[1])
 
             }
         }
@@ -42,7 +41,7 @@ describe("BlockMsgContractTest.js opcode -blockchain -block ", function () {
         // let height = await ethers.provider.getBlockNumber()
         let height = receipt.blockNumber
         for (let i = 0; i < receipt.blkHashs.length; i++) {
-            console.log("receipt.blkHashs[i]:",i,receipt.blkHashs[i])
+            console.log("receipt.blkHashs[i]:", i, receipt.blkHashs[i])
             if (height.add(1) - i < 0) {
                 expect(receipt.blkHashs[i]).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
                 continue;
