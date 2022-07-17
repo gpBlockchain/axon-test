@@ -374,7 +374,7 @@ describe("eth_call", function () {
                         data: '0x',
                         value: fromBalance.mul(BigNumber.from('1000000')).toHexString().replace('0x0', '0x'),
                     }, 'latest'])
-            }catch (e){
+            } catch (e) {
                 return
             }
             expect('').to.be.equal('failed')

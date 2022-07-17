@@ -22,7 +22,7 @@ describe("create2_test.js ", function () {
 
     //test_create2_destruct_creat2
     it("create2 invoke same contract in 1tx", async () => {
-        let tx = await contract.test_create2_deploy_2_same_contract({gasLimit:10000000});
+        let tx = await contract.test_create2_deploy_2_same_contract({gasLimit: 10000000});
         let receipt = await tx.wait();
         expect(receipt.events[2].args[1]).to.be.not.equal("0x0000000000000000000000000000000000000000")
         expect(receipt.events[4].args[1]).to.be.equal("0x0000000000000000000000000000000000000000")

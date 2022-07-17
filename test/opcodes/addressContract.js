@@ -52,7 +52,7 @@ describe("addressContract.js opcode -address(address(this),address(this).balance
             expect(result[0]).to.be.equal(contract.address)
         })
         it("check address(this).balance", async () => {
-            expect(result[1]).to.be.equal( 10000n)
+            expect(result[1]).to.be.equal(10000n)
         })
 
         it("check address(this).code", async () => {
@@ -113,10 +113,10 @@ describe("addressContract.js opcode -address(address(this),address(this).balance
         })
     })
 
-    describe("get other address msg",function(){
+    describe("get other address msg", function () {
 
-        it("eoa address",async ()=>{
-            let queryAddress=  (await ethers.getSigners())[0].address
+        it("eoa address", async () => {
+            let queryAddress = (await ethers.getSigners())[0].address
             let result = await contract.getOtherAddress(queryAddress);
             let balanceOfEoaAddress = await ethers.provider.getBalance(queryAddress)
             expect(result[0]).to.be.equal(queryAddress)
@@ -135,13 +135,13 @@ describe("addressContract.js opcode -address(address(this),address(this).balance
             expect(result[4]).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000000000")
         })
 
-        it("contract address",async ()=>{
+        it("contract address", async () => {
             let result = await contract.getOtherAddress(contract2.address);
             let code = await ethers.provider.getCode(contract2.address)
             expect(result[0]).to.be.equal(contract2.address)
             expect(result[1]).to.be.equal(101n)
             expect(result[2]).to.be.equal(code)
-            expect(result[3]).to.be.equal(code.length/2-1)
+            expect(result[3]).to.be.equal(code.length / 2 - 1)
             expect(result[4]).to.be.equal("0xc5a94d21b524783a20d29f69f58fb1e79791dd9145c027947fdb87fbb1e25826")
 
         })

@@ -9,9 +9,9 @@ describe("failed intercepts tx", function () {
 
     })
 
-    describe("Failed to verify the signature" , function () {
+    describe("Failed to verify the signature", function () {
 
-        it("hexString must has even length" , async () => {
+        it("hexString must has even length", async () => {
             try {
                 await ethers.provider.send("eth_sendRawTransaction", ["0xf8fa8215ce82271083030d408080b8a660566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220921156c6271e9bb625bba2409473901eb7df9309044f9da2786a74bc2dfac9d664736f6c6343000806003383022df6a0b3bccb3e03652d5defc9b53e7bc905399a825e5aa278d809f3db01901d310e1ca07db5263de82feb6c3b244d170cb498bff0d82e4f18bf81af3546fafaca10214"])
             } catch (e) {
@@ -35,7 +35,7 @@ describe("failed intercepts tx", function () {
             }
         })
     })
-    
+
 
     it("nonce too low or too high", async () => {
         console.log("nonce low")
@@ -90,13 +90,13 @@ describe("failed intercepts tx", function () {
     it("gasLimit too low(https://github.com/nervosnetwork/godwoken-web3/issues/382)", async () => {
 
         try {
-             await ethers.provider.send("eth_sendTransaction", [{
+            await ethers.provider.send("eth_sendTransaction", [{
                 "from": "0x0c1efcca2bcb65a532274f3ef24c044ef4ab6d73",
                 "gas": "0x1",
                 "data": "0x60566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220921156c6271e9bb625bba2409473901eb7df9309044f9da2786a74bc2dfac9d664736f6c63430008060033"
             }]);
             expect("").to.be.equal("failed")
-        }catch (e){
+        } catch (e) {
             expect(e.toString()).to.be.include("")
         }
     })
@@ -140,7 +140,7 @@ describe("failed intercepts tx", function () {
             let txHash = await ethers.provider.send("eth_sendTransaction", [{
                 "from": "0x0c1efcca2bcb65a532274f3ef24c044ef4ab6d73",
                 "to": "0x0c1efcca2bcb65a532274f3ef24c044ef4ab6d73",
-                "gas":"0x2faf0",
+                "gas": "0x2faf0",
             }]);
             console.log("txHash:", txHash)
         } catch (e) {
