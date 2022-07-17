@@ -16,6 +16,22 @@ describe("newFilter", function () {
         expect(logs.toString()).to.be.equal('')
     })
 
+    it("invoke eth_getFilterChanges 1 send tx,send eth_getFilterChanges again  , should seconde num = 1st num+1  ", async () => {
+        const filterId = await ethers.provider.send("eth_newFilter", [{}]);
+        console.log(filterId);
+        await sendTxToAddBlockNum(ethers.provider, 2)
+        let logs1 = await ethers.provider.send("eth_getFilterChanges", [filterId]);
+        checkLogsIsSort(logs1)
+        await sendTxToAddBlockNum(ethers.provider, 1)
+        let logs2 = await ethers.provider.send("eth_getFilterChanges", [filterId]);
+        console.log('---1---')
+        checkLogsIsSort(logs1)
+        console.log('---2---')
+        checkLogsIsSort(logs2)
+        expect(BigNumber.from(logs1[logs1.length-1].blockNumber.toString()).add(1).toString()).to.be.equal(BigNumber.from(logs2[logs2.length-1].blockNumber.toString()))
+
+    })
+
     it("0xffffffffffffffffffffffffffffff", async () => {
         const filterId = await ethers.provider.send("eth_newFilter", [{
             "fromBlock": "0xff"
@@ -124,6 +140,7 @@ describe("newFilter", function () {
             })
 
             it("blockNumber(blockHeight+2),should return (blockHeight+2)'s log", async () => {
+
                 await checkLogsGteHeight(filterMsg["fromBlock.blockHeight+2"].logs, blockHeight + 2)
                 await checkLogsIsSort(filterMsg["fromBlock.blockHeight+2"].logs)
             })
@@ -152,6 +169,7 @@ describe("newFilter", function () {
             })
 
             it("latest,should return all logs ", async () => {
+
                 await checkLogsGteHeight(filterMsg["toBlock.latest"].logs, blockHeight)
                 await checkLogsIsSort(filterMsg["toBlock.latest"].logs)
             })
@@ -162,9 +180,9 @@ describe("newFilter", function () {
 
             it("blockNumber(height),should return 0 log", async () => {
                 //todo check axon first block number
-                console.log(filterMsg["toBlock.height"])
+                console.log(filterMsg["toBlock.height"].filterMap)
                 //invalid from and to block combination: from > to
-                await checkLogsLteHeight(filterMsg["toBlock.height+1"].logs, blockHeight)
+                await checkLogsLteHeight(filterMsg["toBlock.height"].logs, blockHeight)
                 expect(filterMsg["toBlock.height"].logs.length).to.be.equal(0)
 
             })
@@ -254,11 +272,15 @@ describe("newFilter", function () {
                 },
 
                 "topic.address.exist":{
-                    "address":contractAddress
+                    "address":[contractAddress]
                 },
                 "topic.address.no":{
-                    "address":await ethers.provider.getSigner().getAddress()
-                }
+                    "address":[await ethers.provider.getSigner().getAddress()]
+                },
+                "topic.address.no.notExist":{
+                    "address":""
+                },
+
             }
 
             // register filter Id
@@ -391,6 +413,7 @@ async function getFilterMsgByFilter(filterMap, sendBlkNum) {
         console.log('value:', filterMap[key])
         FilterMsg[key] = {}
         try {
+            FilterMsg[key].filterMap = filterMap
             FilterMsg[key].filterId = await ethers.provider.send("eth_newFilter", [filterMap[key]])
         } catch (e) {
             FilterMsg[key].error = e

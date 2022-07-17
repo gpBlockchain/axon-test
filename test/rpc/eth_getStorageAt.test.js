@@ -10,10 +10,15 @@ describe("eth_getStorageAt", function () {
         expect(data).to.be.include('0x')
     })
 
-    it('not exist address very large idx  , should return 0x0', async () => {
+    it('not exist address very large idx  , should return error msg', async () => {
         //todo check axon result return failed or return 0x
-        let data = await ethers.provider.send('eth_getStorageAt', [notExistAddress, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 'latest'])
-        expect(data).to.be.include('0x')
+        try {
+            await ethers.provider.send('eth_getStorageAt', [notExistAddress, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 'latest'])
+
+        }catch (e){
+            return
+        }
+        expect('').to.be.equal('failed')
     })
 
     it('eoa address, should return 0x0', async () => {
