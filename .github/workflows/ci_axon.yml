@@ -53,4 +53,3 @@ jobs:
         with:
           name: jfoa-build-reports-${{ runner.os }}
           path: mochawesome-report/
-Footer
