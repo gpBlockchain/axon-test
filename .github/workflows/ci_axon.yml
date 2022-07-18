@@ -1,4 +1,4 @@
-name: ci_axon
+name: runAxon
 
 on:
   push:
