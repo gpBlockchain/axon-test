@@ -126,7 +126,7 @@ describe("Failed commit tx", function () {
             let tx = await contract.testLog(300000, {gasLimit: "0x989680"})
             let response = await getTxReceipt(ethers.provider, tx.hash, 100)
             expect(response.status).to.be.equal(0)
-        }).timeout(60000)
+        })
     })
 
     describe("Assert(0.8.0)", function () {

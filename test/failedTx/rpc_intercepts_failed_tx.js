@@ -75,10 +75,9 @@ describe("failed intercepts tx", function () {
 
     })
 
-    it("tx size size is larger than the limit(https://github.com/nervosnetwork/godwoken-web3/issues/381)", async () => {
+    it("tx size size is larger than the limit(https://github.com/nervosnetwork/godwoken-web3/issues/381),should return deploy bytecode too big", async () => {
         try {
             let tx = await ethers.provider.send("eth_sendTransaction", [{
-                // "from": "0x0c1efcca2bcb65a532274f3ef24c044ef4ab6d73",
                 "gas": "0xfffff",
                 "data": MAX_LONG_BYTES
             }]);

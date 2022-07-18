@@ -11,7 +11,7 @@ describe("eth_getBlockTransactionCountByHash", function () {
         let block = await ethers.provider.getBlock('latest');
         // get tx count
         let txNum =await ethers.provider.send('eth_getBlockTransactionCountByHash',[block.hash]);
-        expect(BigNumber.from(block.transactions.length).toHexString()).to.be.include(txNum)
+        expect(BigNumber.from(block.transactions.length)).to.be.equal(txNum)
     })
 
     it('not exist blockHash,should return 0x0',async ()=>{

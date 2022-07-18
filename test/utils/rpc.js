@@ -187,6 +187,7 @@ async function sendRandomTx(provider) {
     let logContract = await ethers.getContractFactory("eventDeployLogContract");
     try {
         await provider.send("eth_sendTransaction", [{
+            "from":(await ethers.getSigner(1)).address,
             "data": logContract.bytecode
         }]);
     } catch (e) {

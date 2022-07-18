@@ -296,8 +296,13 @@ describe("newFilter", function () {
 
 
             // send 100 tx
+            // eventContract = eventContract.connect(await ethers.provider.getSigner(1));
             let nonce = await ethers.provider.getTransactionCount(eventContract.signer.address,"latest")
+
+            // let address = await ethers.provider.getSigner(1).getAddress()
+            //  nonce = await ethers.provider.send('eth_getTransactionCount',[address])
             for (let i = 0; i < 5; i++) {
+
                 let tx = await eventContract.testLog4(500, {nonce: nonce})
                 await sleep(50)
                 nonce++

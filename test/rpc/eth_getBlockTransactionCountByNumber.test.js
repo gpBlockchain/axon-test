@@ -11,7 +11,7 @@ describe("eth_getBlockTransactionCountByHash", function () {
         let block = await ethers.provider.getBlock('latest');
         // get tx count
         let txNum =await ethers.provider.send('eth_getBlockTransactionCountByNumber',[BigNumber.from(block.number).toHexString()]);
-        expect(BigNumber.from(block.transactions.length).toHexString()).to.be.include(txNum)
+        expect(BigNumber.from(block.transactions.length)).to.be.equal(txNum)
     })
 
     it('pending,should return block\'s tx length',async ()=>{
@@ -20,7 +20,7 @@ describe("eth_getBlockTransactionCountByHash", function () {
         let block = await ethers.provider.getBlock('pending');
         // get tx count
         let txNum =await ethers.provider.send('eth_getBlockTransactionCountByNumber',['pending']);
-        expect(BigNumber.from(block.transactions.length).toHexString()).to.be.include(txNum)
+        expect(BigNumber.from(block.transactions.length)).to.be.equal(txNum)
     })
 
     it('earliest,should return block\'s tx length',async ()=>{
@@ -29,7 +29,7 @@ describe("eth_getBlockTransactionCountByHash", function () {
         let block = await ethers.provider.getBlock('earliest');
         // get tx count
         let txNum =await ethers.provider.send('eth_getBlockTransactionCountByNumber',['earliest']);
-        expect(BigNumber.from(block.transactions.length).toHexString().replace('0x0','0x')).to.be.include(txNum)
+        expect(BigNumber.from(block.transactions.length)).to.be.equal(txNum)
     })
 
     it('not exist block num,should return error ',async ()=>{
