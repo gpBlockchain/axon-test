@@ -110,6 +110,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           # upload build test reports
+      - name: Check Log
+        if: success() || failure()
+        run: |
+          tail -n 100 /home/runner/work/axon-test/axon-test/axon/chain.log
       - name: Publish reports
         if: always()
         uses: actions/upload-artifact@v2
