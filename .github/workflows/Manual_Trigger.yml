@@ -113,7 +113,7 @@ jobs:
       - name: Check Log
         if: success() || failure()
         run: |
-          tail -n 100 /home/runner/work/axon-test/axon-test/axon/chain.log
+          tail -n 10000 /home/runner/work/axon-test/axon-test/axon/chain.log
       - name: Publish reports
         if: always()
         uses: actions/upload-artifact@v2
