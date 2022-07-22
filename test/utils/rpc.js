@@ -130,7 +130,7 @@ async function getTxReceipt(provider, txHash, count) {
             await sleep(2000)
             continue;
         }
-        if (response.confirmations === 1) {
+        if (response.confirmations >= 1) {
             return response
         }
         await sleep(2000)
