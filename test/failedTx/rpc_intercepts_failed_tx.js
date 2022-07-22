@@ -75,7 +75,7 @@ describe("failed intercepts tx", function () {
 
     })
 
-    it("tx size size is larger than the limit(https://github.com/nervosnetwork/godwoken-web3/issues/381),should return deploy bytecode too big", async () => {
+    it.skip("tx size size is larger than the limit(https://github.com/cryptape/axon-internal/issues/198),should return deploy bytecode too big", async () => {
         try {
             let tx = await ethers.provider.send("eth_sendTransaction", [{
                 "gas": "0xfffff",

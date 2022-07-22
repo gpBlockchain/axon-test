@@ -6,7 +6,7 @@ describe("eth_newBlockFilter", function () {
     this.timeout(6000000)
 
 
-    it("filter 2times => second must 0", async () => {
+    it.skip("filter 2times => second must 0(https://github.com/cryptape/axon-internal/issues/198)", async () => {
 
         // eth_newBlockFilter
         const filterId = await ethers.provider.send("eth_newBlockFilter", []);
@@ -21,7 +21,7 @@ describe("eth_newBlockFilter", function () {
     })
 
 
-    it(" send 5 block num ,should sort", async () => {
+    it.skip(" send 5 block num ,should sort(https://github.com/cryptape/axon-internal/issues/198)", async () => {
 
         let beginNum = await ethers.provider.getBlockNumber();
         const filterId = await ethers.provider.send("eth_newBlockFilter", []);

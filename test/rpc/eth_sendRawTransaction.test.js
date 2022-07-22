@@ -139,7 +139,7 @@ describe("eth_sendRawTransaction ", function () {
         it("gasLimit is 0 => out of gas", async () => {
 
             try {
-                let tx = await ethers.provider.send("eth_sendTransaction", [{
+                await ethers.provider.send("eth_sendTransaction", [{
                     "gas": "0x0",
                     "data": fallbackAndReceiveContract.bytecode
                 }]);
@@ -177,7 +177,7 @@ describe("eth_sendRawTransaction ", function () {
                     "data": fallbackAndReceiveContract.bytecode
                 }]);
 
-                let response = await getTxReceipt(ethers.provider,tx,100)
+                await getTxReceipt(ethers.provider,tx,100)
                 let txMsg = await ethers.provider.getTransaction(tx);
                 console.log('tx msg:',txMsg)
             } catch (e) {
@@ -358,7 +358,7 @@ describe("eth_sendRawTransaction ", function () {
                 expect("").to.be.equal("failed")
             })
 
-            it("nonce is too max   => invalid nonce ", async () => {
+            it.skip("nonce is too max,should can query tx msg (https://github.com/cryptape/axon-internal/issues/198)", async () => {
                 let penddingNonce = await ethers.provider.getTransactionCount(ethers.provider.getSigner().getAddress(), "pending")
                 console.log("pendding:", penddingNonce)
                 try {

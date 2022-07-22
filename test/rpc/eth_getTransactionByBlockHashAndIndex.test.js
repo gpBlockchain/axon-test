@@ -25,7 +25,7 @@ describe("eth_getTransactionByBlockHashAndIndex", function () {
 
     describe("exist blockHash", async () => {
 
-        it("empty txs block,should return null ",async ()=>{
+        it.skip("empty txs block,should return null(https://github.com/cryptape/axon-internal/issues/198)",async ()=>{
             //todo check axon result
             let response = await ethers.provider.getBlock("earliest")
             let tx = await ethers.provider.send("eth_getTransactionByBlockHashAndIndex",[response.hash,"0x0"])
