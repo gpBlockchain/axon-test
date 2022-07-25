@@ -44,7 +44,7 @@ describe("getTransactionByBlockNumberAndIndex", function () {
 
     describe("exist num ,idx", async () => {
 
-        it("empty txs block ", async () => {
+        it.skip("empty txs block(https://github.com/cryptape/axon-internal/issues/198)", async () => {
             //todo check axon result
             let tx = await ethers.provider.send("eth_getTransactionByBlockNumberAndIndex", ["0x0", "0x0"])
             expect(tx).to.be.equal(null)

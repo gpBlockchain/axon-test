@@ -54,7 +54,7 @@ describe("type  max min data test",function (){
             }
         })
 
-        it("typeU8 minest 0: ", async () => {
+        it.skip("typeU8 minest 0 (https://github.com/cryptape/axon-internal/issues/198) ", async () => {
             let tx = await contract.typeUint8(0,[0,0,0],[0,0,0]);
             console.log("typeUint8 hash :",tx.hash);
             await tx.wait();

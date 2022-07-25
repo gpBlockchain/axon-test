@@ -57,7 +57,7 @@ describe("CrossCallTest.js cross call ", function () {
     })
 
     describe("static_call", function () {
-        it("static_call demo", async () => {
+        it.skip("static_call demo(https://github.com/cryptape/axon-internal/issues/198)", async () => {
             let tx = await crossContract.call_staticcallFunc();
             await tx.wait()
         })

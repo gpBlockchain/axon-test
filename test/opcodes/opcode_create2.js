@@ -14,7 +14,7 @@ describe("create2_test.js ", function () {
         console.log("contractAddress:", contract.address);
     });
 
-    it("demo", async () => {
+    it.skip("demo(https://github.com/cryptape/axon-internal/issues/198)", async () => {
         let tx = await contract.testCreate();
         let receipt = await tx.wait();
         expect(receipt.events[0].data).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000000001");
@@ -40,7 +40,7 @@ describe("create2_test.js ", function () {
     })
 
 
-    it("create2 self destruct in 1tx ", async () => {
+    it.skip("create2 self destruct in 1tx (https://github.com/cryptape/axon-internal/issues/198)", async () => {
         let tx = await contract.test_create2_selfDestruct_create2();
         await tx.wait();
     })
