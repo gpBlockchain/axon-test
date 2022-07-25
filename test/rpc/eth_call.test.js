@@ -890,7 +890,7 @@ describe("eth_call", function () {
             expect(eth_call_msg.gasLimit.toString()).to.be.equal('65535')
         })
 
-        it("gas - very big (godwoken-exceeds rpc gas limit of),should return error msg", async () => {
+        it.skip("gas - very big (godwoken-exceeds rpc gas limit of),should return error msg", async () => {
             try {
                 let ret = await ethers.provider.send("eth_call", [{
                     "from": haveCkbAddress,

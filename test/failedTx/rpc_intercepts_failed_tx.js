@@ -120,7 +120,7 @@ describe("failed intercepts tx", function () {
 
     })
 
-    it(" balance is't sufficient to cover the fees and transfer amount(https://github.com/nervosnetwork/godwoken-web3/issues/385)", async () => {
+    it.skip(" balance is't sufficient to cover the fees and transfer amount(https://github.com/nervosnetwork/godwoken-web3/issues/385)(https://github.com/cryptape/axon-internal/issues/198)", async () => {
 
         console.log("send tx that value > user's balance")
         try {
