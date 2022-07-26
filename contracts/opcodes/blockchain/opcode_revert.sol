@@ -2,6 +2,8 @@ pragma solidity ^0.8.4;
 
 contract RevertContract {
 
+    error Empty();
+
     function revert1() public {
         revert("1234");
     }
@@ -28,4 +30,11 @@ contract RevertContract {
     function testRequireBalanceView() public view {
         require(false, "ERC20: transfer amount exceeds balance");
     }
+
+
+    function testEmpty() public view returns(bool){
+        revert Empty();
+        return true;
+    }
+
 }

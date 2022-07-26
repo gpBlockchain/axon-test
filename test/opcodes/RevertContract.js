@@ -17,11 +17,13 @@ describe("RevertContract.js opcode ", function () {
     it("revert1View 1(https://github.com/nervosnetwork/godwoken-web3/issues/423)", async () => {
         try {
             await contract.revert1View();
-            expect("").to.be.equal("failed")
         } catch (e) {
             console.log('e.toString():', e.toString())
             expect(e.toString()).to.be.include("1234112341123411234112341123411234112")
+            return
         }
+        expect("").to.be.equal("failed")
+
     })
     it("revert msg(https://github.com/nervosnetwork/godwoken-web3/issues/423)", async () => {
         let msg = "";
@@ -30,11 +32,25 @@ describe("RevertContract.js opcode ", function () {
         }
         try {
             await contract.revertMsg(msg);
-            expect("").to.be.equal("failed")
         } catch (e) {
             expect(e.toString()).to.be.contains("sssssssssssssssssssssssssssssssssssss")
-
+            return
         }
+        expect("").to.be.equal("failed")
+
+
+    })
+
+    it("revert with method ",async ()=>{
+
+        try {
+            await contract.testEmpty()
+        }catch (e){
+            expect(e.toString()).to.be.include("Empty")
+            return
+        }
+        expect("").to.be.equal("failed")
+
 
     })
 
