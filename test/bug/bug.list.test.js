@@ -65,5 +65,54 @@ describe("bug", function () {
         })
     });
 
+    it.skip("v3-core(proxy cannot call the method that calls a private method with the modifier)", async () => {
+        // deploy NoDelegateCallTest
+        let noDelegateCallTestContractInfo = await ethers.getContractFactory("NoDelegateCallTest");
+        let noDelegateCallTestContract = await noDelegateCallTestContractInfo.deploy()
+        await noDelegateCallTestContract.deployed()
+
+        // deploy CloneFactory
+        let cloneFactoryContractInfo = await ethers.getContractFactory("CloneFactory");
+        let cloneFactoryContract = await cloneFactoryContractInfo.deploy()
+
+        await cloneFactoryContract.deployed()
+
+        // create proxy contract
+        let tx = await cloneFactoryContract.createClone(noDelegateCallTestContract.address)
+        await tx.wait()
+        let proxyAddress = await cloneFactoryContract.addressMap(noDelegateCallTestContract.address)
+        console.log('proxy address:', proxyAddress)
+        let proxyDelegateCallContract = await noDelegateCallTestContractInfo.attach(proxyAddress)
+
+        // proxy invoke normal  method =>   invoke success
+        let callResult = await proxyDelegateCallContract.getGasCostOfCanBeDelegateCalled()
+        console.log('getGasCostOfCanBeDelegateCalled:', callResult)
+        expect(callResult).to.be.gt("1")
+
+        // proxy invoke failed method => expected :execution reverted
+        try {
+            await proxyDelegateCallContract.callsIntoNoDelegateCallFunction()
+        } catch (e) {
+            return
+        }
+
+        // failed reason:
+        //eth
+        //jsonRpcResponse: {
+        //   jsonrpc: '2.0',
+        //   id: 71,
+        //   error: { code: -32000, message: 'execution reverted' }
+        // }
+        // axon
+        //
+        //jsonRpcResponse: {
+        //   jsonrpc: '2.0',
+        //   error: { code: -32015, message: 'execution reverted: ', data: '0x' },
+        //   id: 53
+        // }
+        expect('').to.be.include('failed')
+
+    })
+
 
 })
