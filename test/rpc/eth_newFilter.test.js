@@ -16,7 +16,7 @@ describe("newFilter", function () {
         expect(logs.toString()).to.be.equal('')
     })
 
-    it("invoke eth_getFilterChanges 1 send tx,send eth_getFilterChanges again  , should seconde num = 1st num+1  ", async () => {
+    it("invoke eth_getFilterChanges 1 send tx,send eth_getFilterChanges again  , should second num = 1st num+1  ", async () => {
         const filterId = await ethers.provider.send("eth_newFilter", [{}]);
         console.log(filterId);
         await sendTxToAddBlockNum(ethers.provider, 2)
@@ -28,6 +28,9 @@ describe("newFilter", function () {
         checkLogsIsSort(logs1)
         console.log('---2---')
         checkLogsIsSort(logs2)
+        if(logs1.length === 0 || logs2.length === 0){
+            return
+        }
         expect(BigNumber.from(logs1[logs1.length-1].blockNumber.toString()).add(1).toString()).to.be.equal(BigNumber.from(logs2[logs2.length-1].blockNumber.toString()))
 
     })
