@@ -65,5 +65,16 @@ describe("bug", function () {
         })
     });
 
+    it.skip('invoke eth_getTransactionByHash,should tx.gasLimit != tx.gasUsed ,tx.gasLimit == rawDecoder(tx.raw).gasLimit ',async ()=>{
+        let toAddress = (await ethers.getSigners())[1].address
+        let tx = await ethers.provider.getSigner().sendTransaction({
+            to:toAddress,
+            gasLimit:"0xffffff",
+            data:'0x',
+        })
+        await tx.wait()
+        expect(tx.gasLimit).to.be.equal(16777215)
+    })
+
 
 })
