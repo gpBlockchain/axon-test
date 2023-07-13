@@ -88,7 +88,7 @@ jobs:
             cd axon
             cargo build --release
             rm -rf ./devtools/chain/data
-            ./target/release/axon --config=./devtools/chain/config.toml --genesis=./devtools/chain/genesis_single_node.json > chain.log 2>&1 &
+            ./target/release/axon run --config=./devtools/chain/config.toml --genesis=./devtools/chain/genesis_single_node.json > chain.log 2>&1 &
           fi
       - name: Run tests
         id: runtest
