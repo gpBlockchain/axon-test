@@ -34,7 +34,7 @@ jobs:
             ${{ runner.os }}-node_modules-
       - name: Deploy Local Network of Axon
         run: |
-            git clone https://github.com/nervosnetwork/axon.git
+            git clone https://github.com/axonweb3/axon.git
             cd axon
             cargo build --package axon
             cargo run --package axon --bin axon -- run --config=./devtools/chain/config.toml --genesis=./devtools/chain/genesis_single_node.json > chain.log 2>&1 &
@@ -47,6 +47,10 @@ jobs:
         if: success() || failure()
         run: |
           curl http://localhost:8000 -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"web3_clientVersion","params": [],"id":1}'
+      - name: cp axon log file
+        if: always()
+        run: | 
+           cp axon/chain.log mochawesome-report
       - name: Publish reports
         if: always()
         uses: actions/upload-artifact@v2
