@@ -88,6 +88,10 @@ describe("BlockMsgContractTest.js opcode -blockchain -block ", function () {
             expect(ethCallBlockData[3].toString()).to.be.equal(updateBlockMsg.difficulty.toString())
         })
 
+        it("check block.difficulty value", async () => {
+            expect(ethCallBlockData[3].toString()).to.be.equal(String(1))
+        })
+
         it("check block.gaslimit", async () => {
             expect(ethCallBlockData[4]).to.be.gt("1")
 
