@@ -37,7 +37,7 @@ jobs:
             git clone https://github.com/axonweb3/axon.git
             cd axon
             cargo build --package axon 
-            cargo run --package axon --bin axon -- run --config devtools/chain/config.toml --chain-spec devtools/chain/specs/single_node/chain-spec.toml > chain.log 2>&1 & &
+            cargo run --package axon --bin axon -- run --config devtools/chain/config.toml --chain-spec devtools/chain/specs/single_node/chain-spec.toml > chain.log 2>&1 &
       - name: Run tests
         id: runtest
         run: |
