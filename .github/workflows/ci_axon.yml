@@ -36,8 +36,8 @@ jobs:
         run: |
             git clone https://github.com/axonweb3/axon.git
             cd axon
-            cargo build --package axon
-            cargo run --package axon --bin axon -- run --config=./devtools/chain/config.toml --genesis=./devtools/chain/genesis_single_node.json > chain.log 2>&1 &
+            cargo build --package axon 
+            cargo run --package axon --bin axon -- run --config devtools/chain/config.toml --chain-spec devtools/chain/specs/single_node/chain-spec.toml > chain.log 2>&1 & &
       - name: Run tests
         id: runtest
         run: |
@@ -48,7 +48,7 @@ jobs:
         run: |
           curl http://localhost:8000 -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"web3_clientVersion","params": [],"id":1}'
       - name: cp axon log file
-        if: always()
+        if: failure()
         run: | 
            cp axon/chain.log mochawesome-report
       - name: Publish reports
