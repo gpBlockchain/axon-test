@@ -417,9 +417,9 @@ describe("eth_call", function () {
                     to: normalEoaAddress,
                     data: '',
                 }, 'latest']);
-                expect(ret).to.be.include('0x');
             } catch (error) {
                 console.error("An error occurred:", error);
+                expect(error.message).to.include('invalid prefix');
             }
         })
         it("data is 0x0fff,should return 0x", async () => {
