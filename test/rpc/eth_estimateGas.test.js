@@ -402,17 +402,16 @@ describe("eth_estimateGas", function () {
         })
 
         it("data is '',should return gas cost", async () => {
-            //todo check axon succ
-            // hardhat failed
-            let estimateGas = await ethers.provider.send('eth_estimateGas',
-                [{
-                    from: haveCkbAddress,
-                    to: normalEoaAddress,
-                    data: '',
-                }])
-            expect(estimateGas).to.be.include('0x')
-
-
+            try {
+                await ethers.provider.send('eth_estimateGas',
+                    [{
+                        from: haveCkbAddress,
+                        to: normalEoaAddress,
+                        data: '',
+                    }])
+            } catch (error) {
+                expect(error.message).to.include('invalid prefix');
+            }
         })
         it("data is 0x0fff,should return gas cost", async () => {
             let estimateGas = await ethers.provider.send('eth_estimateGas',

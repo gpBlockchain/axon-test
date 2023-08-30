@@ -412,13 +412,12 @@ describe("eth_call", function () {
 
         it("data is '',should return 0x", async () => {
             try {
-                let ret = await ethers.provider.send('eth_call', [{
+                await ethers.provider.send('eth_call', [{
                     from: haveCkbAddress,
                     to: normalEoaAddress,
                     data: '',
                 }, 'latest']);
             } catch (error) {
-                console.error("An error occurred:", error);
                 expect(error.message).to.include('invalid prefix');
             }
         })
