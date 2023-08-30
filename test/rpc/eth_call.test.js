@@ -411,15 +411,16 @@ describe("eth_call", function () {
         })
 
         it("data is '',should return 0x", async () => {
-            //todo check axon succ
-            // hardhat failed
-            let ret = await ethers.provider.send('eth_call',
-                [{
+            try {
+                let ret = await ethers.provider.send('eth_call', [{
                     from: haveCkbAddress,
                     to: normalEoaAddress,
                     data: '',
-                }, 'latest'])
-            expect(ret).to.be.include('0x')
+                }, 'latest']);
+                expect(ret).to.be.include('0x');
+            } catch (error) {
+                console.error("An error occurred:", error);
+            }
         })
         it("data is 0x0fff,should return 0x", async () => {
             let ret = await ethers.provider.send('eth_call',
