@@ -29,8 +29,10 @@ describe("web3_sha3", function () {
         expect('').to.be.equal('failed')
     })
     it(' params is no 0x ,should failed ', async () => {
-        //todo check  eth return failed
-        let response = await ethers.provider.send('web3_sha3', ["68656c6c6f20776f726c64"])
-        expect(response).to.be.equal('0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad')
+        try {
+            await ethers.provider.send('web3_sha3', ["68656c6c6f20776f726c64"])
+        } catch (error) {
+            expect(error.message).to.include('invalid prefix');
+        }
     })
 })
