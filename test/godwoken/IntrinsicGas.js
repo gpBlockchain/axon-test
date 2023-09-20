@@ -45,7 +45,7 @@ describe("MIN GAS PRICE Test",  function () {
 
   it("Eth_sendRawTransaction with 0 gasLimit", async () => {
     const errMsg = [
-      "gas limit less than 21000",
+      "Gas limit is less than 21000",
     ];
     const method = async () => {
       const tx = await ethCallContract.set(expectedValue, { gasLimit: 0 });
@@ -56,7 +56,7 @@ describe("MIN GAS PRICE Test",  function () {
 
   it("Eth_sendRawTransaction with insufficient balance", async () => {
     const errMsg = [
-      "The gas price is too large",
+      "Gas price is too large",
     ];
     const method = async () => {
       const tx = await ethCallContract.populateTransaction.set(expectedValue);
