@@ -47,7 +47,7 @@ describe("MIN GAS PRICE Test", function () {
   it("Eth_sendRawTransaction with lower gasPrice", async () => {
     const p = new Array(1).fill(1).map(async () => {
       const errMsg = [
-        "The transaction gas price is zero",
+        "Gas price is zero",
       ];
       const method = async () => {
         const tx = await ethCallContract.set(expectedValue, { gasPrice: 0 });

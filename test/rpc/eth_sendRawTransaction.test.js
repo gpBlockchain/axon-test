@@ -144,7 +144,7 @@ describe("eth_sendRawTransaction ", function () {
                     "data": fallbackAndReceiveContract.bytecode
                 }]);
             } catch (e) {
-                expect(e.toString()).to.be.contains("gas")
+                expect(e.toString()).to.be.contains("Gas limit is less than 21000")
                 return
             }
             expect("").to.be.contains("expected throw out of gas")
