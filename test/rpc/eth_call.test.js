@@ -418,7 +418,7 @@ describe("eth_call", function () {
                     data: '',
                 }, 'latest']);
             } catch (error) {
-                expect(error.message).to.include('Hex should start with 0x');
+                expect(error.data).to.include('Hex should start with 0x');
             }
         })
         it("data is 0x0fff,should return 0x", async () => {

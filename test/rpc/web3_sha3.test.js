@@ -32,7 +32,7 @@ describe("web3_sha3", function () {
         try {
             await ethers.provider.send('web3_sha3', ["68656c6c6f20776f726c64"])
         } catch (error) {
-            expect(error.message).to.include('Hex should start with 0x');
+            expect(error.data).to.include('Hex should start with 0x');
         }
     })
 })
